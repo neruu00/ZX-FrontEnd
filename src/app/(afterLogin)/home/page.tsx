@@ -1,6 +1,5 @@
 import BookMark from '@/components/BookMark';
 import SearchField from '@/components/SearchField';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
@@ -16,7 +15,6 @@ export default function HomePage() {
       <div className="w-full flex justify-end">
         <SearchField />
       </div>
-      <ThemeToggle />
       <BookMark />
     </main>
   );

@@ -1,7 +1,8 @@
 'use client';
 
-import { BookOpen, ChevronRight, FileText, Home, Settings } from 'lucide-react';
+import { BookOpen, ChevronRight, FileText, Home, Moon, Settings, Sun } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 import { cn } from '@/lib/utils';
 
@@ -35,6 +36,11 @@ const items = [
 export default function AppSidebar() {
   const { open, toggleSidebar } = useSidebar();
   const path = usePathname();
+  const { setTheme, resolvedTheme: theme } = useTheme();
+
+  const onClick = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <Sidebar collapsible="icon">
@@ -63,6 +69,15 @@ export default function AppSidebar() {
       <Separator />
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <div onClick={onClick}>
+                <Sun className="dark:hidden" />
+                <Moon className="hidden dark:block" />
+                <span>테마 변경</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <a href="#">
