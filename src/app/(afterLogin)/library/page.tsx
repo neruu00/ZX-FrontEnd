@@ -1,7 +1,10 @@
+import BookContainer from '@/components/BookContainer';
+
 export default function LibraryPage() {
   return (
-    <main className="p-4">
+    <main className="w-[920px] m-auto p-4">
       <h1>Library Page</h1>
+      <BookContainer />
     </main>
   );
 }
