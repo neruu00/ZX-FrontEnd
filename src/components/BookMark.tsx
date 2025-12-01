@@ -30,15 +30,15 @@ export default function BookMark() {
       </CardHeader>
       <CardContent>
         <div>
-          <div className="text-primary text-2xl mb-2 font-bold">{title}</div>
-          <div className="text-muted-foreground text-sm mb-4">
+          <div className="text-primary mb-2 text-2xl font-bold">{title}</div>
+          <div className="text-muted-foreground mb-4 text-sm">
             {author} · {genre}
           </div>
         </div>
         <ProgressCard className="mb-6" description={`${read}/${page}`} value={progress} />
       </CardContent>
       <CardFooter>
-        <Button variant="highlight" className="w-full py-6 text-primary-foreground">
+        <Button variant="highlight" className="text-primary-foreground w-full py-6">
           <Play fill="currentColor" />
           <span>계속읽기</span>
         </Button>

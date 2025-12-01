@@ -25,21 +25,21 @@ export default function Book({ book }: Props) {
 
   return (
     <div
-      className="group/card aspect-[2/3] overflow-hidden relative hover:scale-105 transition-transform duration-300"
+      className="group/card relative aspect-[2/3] overflow-hidden transition-transform duration-300 hover:scale-105"
       onClick={handleSearch}
     >
-      <ImageWithFallback src={cover} alt={title} className="w-full h-full object-cover" />
-      <Card className="absolute bottom-0 left-0 w-full h-full bg-card/85 opacity-0 group-hover/card:opacity-100 transition-all duration-200 py-4 hover:border-grey-600 border-1 ">
+      <ImageWithFallback src={cover} alt={title} className="h-full w-full object-cover" />
+      <Card className="bg-card/85 hover:border-grey-600 absolute bottom-0 left-0 h-full w-full border-1 py-4 opacity-0 transition-all duration-200 group-hover/card:opacity-100">
         <CardHeader className="px-4">
           <CardTitle className="leading-[-1.5]">{title}</CardTitle>
           <CardDescription>{author}</CardDescription>
         </CardHeader>
-        <CardContent className="grow flex flex-col gap-4 py-6 px-4 justify-between">
+        <CardContent className="flex grow flex-col justify-between gap-4 px-4 py-6">
           {/* <span className="text-sm underline text-zinc-400 underline-offset-4">{genre}</span> */}
           <ProgressCard description="진행률" value={progress} />
         </CardContent>
         <CardFooter className="px-4">
-          <div className="w-full flex items-center justify-between ">
+          <div className="flex w-full items-center justify-between">
             {book.rank > 0 ? (
               <div className="flex items-center gap-0.5">
                 {[...Array(Math.round(rank / 2))].map((_, i) => (
@@ -49,7 +49,7 @@ export default function Book({ book }: Props) {
             ) : (
               <div></div>
             )}
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-orange-500/10 border border-orange-500/20">
+            <div className="flex items-center gap-1.5 border border-orange-500/20 bg-orange-500/10 px-2 py-1">
               <Users size={12} className="text-brand" />
               <span className="text-label text-brand font-mono">{book.readPage}</span>
             </div>

@@ -9,8 +9,8 @@ interface Props {
 export default function ProgressCard({ className, description, value }: Props) {
   return (
     <div className={className}>
-      <div className="w-full flex justify-between items-end">
-        <span className="text-xs text-muted-foreground">{description}</span>
+      <div className="flex w-full items-end justify-between">
+        <span className="text-muted-foreground text-xs">{description}</span>
         <span className="text-brand text-sm">{value}%</span>
       </div>
       <Progress value={value} />
