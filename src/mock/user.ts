@@ -1,5 +1,5 @@
 type BookType = {
-  isbn: number;
+  isbn: string;
   title: string;
   author: string;
   page: number;
@@ -22,7 +22,7 @@ const userData = {
   books: [
     // 1. 인문/역사
     {
-      isbn: 9788934972464,
+      isbn: '9788934972464',
       title: '사피엔스',
       author: '유발 하라리',
       page: 636,
@@ -32,7 +32,7 @@ const userData = {
     },
     // 2. 고전 소설
     {
-      isbn: 9788937460777,
+      isbn: '9788937460777',
       title: '1984',
       author: '조지 오웰',
       page: 444,
@@ -42,7 +42,7 @@ const userData = {
     },
     // 3. 과학 (대작)
     {
-      isbn: 9788983711892,
+      isbn: '9788983711892',
       title: '코스모스',
       author: '칼 세이건',
       page: 719,
@@ -52,7 +52,7 @@ const userData = {
     },
     // 4. 한국 소설 (베스트셀러)
     {
-      isbn: 9791130605210,
+      isbn: '9791130605210',
       title: '아몬드',
       author: '손원평',
       page: 264,
@@ -62,7 +62,7 @@ const userData = {
     },
     // 5. 과학/에세이
     {
-      isbn: 9791187142560,
+      isbn: '9791187142560',
       title: '물고기는 존재하지 않는다',
       author: '룰루 밀러',
       page: 300,
@@ -72,7 +72,7 @@ const userData = {
     },
     // 6. 고전 (필독서)
     {
-      isbn: 9788937460449,
+      isbn: '9788937460449',
       title: '데미안',
       author: '헤르만 헤세',
       page: 248,
@@ -82,7 +82,7 @@ const userData = {
     },
     // 7. 경제/경영
     {
-      isbn: 9791188331796,
+      isbn: '9791188331796',
       title: '돈의 속성',
       author: '김승호',
       page: 288,
@@ -92,7 +92,7 @@ const userData = {
     },
     // 8. 판타지
     {
-      isbn: 9788983927620,
+      isbn: '9788983927620',
       title: '해리 포터와 마법사의 돌 1',
       author: 'J.K. 롤링',
       page: 284,
@@ -102,7 +102,7 @@ const userData = {
     },
     // 9. 인문 (벽돌책)
     {
-      isbn: 9788970127248,
+      isbn: '9788970127248',
       title: '총, 균, 쇠',
       author: '재레드 다이아몬드',
       page: 752,
@@ -112,7 +112,7 @@ const userData = {
     },
     // 10. 소설 (힐링)
     {
-      isbn: 9791191056556,
+      isbn: '9791191056556',
       title: '미드나잇 라이브러리',
       author: '매트 헤이그',
       page: 408,
@@ -122,7 +122,7 @@ const userData = {
     },
     // 11. SF (최신 인기)
     {
-      isbn: 9788936434595,
+      isbn: '9788936434595',
       title: '우리가 빛의 속도로 갈 수 없다면',
       author: '김초엽',
       page: 344,
@@ -132,7 +132,7 @@ const userData = {
     },
     // 12. 고전 (동화)
     {
-      isbn: 9788932917245,
+      isbn: '9788932917245',
       title: '어린 왕자',
       author: '앙투안 드 생텍쥐페리',
       page: 136,

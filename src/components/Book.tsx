@@ -1,8 +1,8 @@
 'use client';
 
 import { Star, Users } from 'lucide-react';
+import Link from 'next/link';
 
-import searchBook from '@/lib/searchBook';
 import { BookType } from '@/mock/user';
 
 import { ImageWithFallback } from './ImageWithFallback';
@@ -18,15 +18,15 @@ export default function Book({ book }: Props) {
 
   const progress = Math.round((readPage / page) * 10000) / 100;
 
-  const handleSearch = async () => {
-    if (!isbn) return;
-    if (confirm('search?')) searchBook.aladin(isbn);
-  };
+  // const handleSearch = async () => {
+  //   if (!isbn) return;
+  //   if (confirm('search?')) searchBook.aladin(isbn);
+  // };
 
   return (
-    <div
+    <Link
+      href={`/books/${isbn}`}
       className="group/card relative aspect-[2/3] overflow-hidden transition-transform duration-300 hover:scale-105"
-      onClick={handleSearch}
     >
       <ImageWithFallback src={cover} alt={title} className="h-full w-full object-cover" />
       <Card className="bg-card/85 hover:border-grey-600 absolute bottom-0 left-0 h-full w-full border-1 py-4 opacity-0 transition-all duration-200 group-hover/card:opacity-100">
@@ -56,6 +56,6 @@ export default function Book({ book }: Props) {
           </div>
         </CardFooter>
       </Card>
-    </div>
+    </Link>
   );
 }
