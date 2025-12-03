@@ -1,12 +1,13 @@
 'use client';
 
-import { Star, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import Link from 'next/link';
 
 import { BookType } from '@/mock/user';
 
 import { ImageWithFallback } from './ImageWithFallback';
 import ProgressCard from './ProgressCard';
+import StarScore from './StarScore';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 
 interface Props {
@@ -40,15 +41,7 @@ export default function Book({ book }: Props) {
         </CardContent>
         <CardFooter className="px-4">
           <div className="flex w-full items-center justify-between">
-            {book.rank > 0 ? (
-              <div className="flex items-center gap-0.5">
-                {[...Array(Math.round(rank / 2))].map((_, i) => (
-                  <Star key={i} size={12} className="text-brand fill-brand" />
-                ))}
-              </div>
-            ) : (
-              <div></div>
-            )}
+            <StarScore value={rank} />
             <div className="flex items-center gap-1.5 border border-orange-500/20 bg-orange-500/10 px-2 py-1">
               <Users size={12} className="text-brand" />
               <span className="text-label text-brand font-mono">{book.readPage}</span>
