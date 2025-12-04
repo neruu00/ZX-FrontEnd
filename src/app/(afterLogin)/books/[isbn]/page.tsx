@@ -70,7 +70,7 @@ export default async function BookPage({ params }: Props) {
               <span>몰입모드</span>
             </Button>
             <Button variant="secondary" className="grow p-6" asChild>
-              <Link href={`/books/report?isbn=${isbn}`}>
+              <Link href={`/books/report/${book.isbn13}`}>
                 <FileText />
                 <span>독후감</span>
               </Link>
