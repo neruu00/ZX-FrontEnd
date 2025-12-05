@@ -1,7 +1,7 @@
 'use client';
 
-import Bold from '@tiptap/extension-bold';
 import Blockquote from '@tiptap/extension-blockquote';
+import Bold from '@tiptap/extension-bold';
 import Document from '@tiptap/extension-document';
 import Heading from '@tiptap/extension-heading';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
@@ -29,6 +29,7 @@ import {
   UnderlineIcon,
 } from 'lucide-react';
 import { useCallback, useState } from 'react';
+
 import { Button } from './ui/button';
 
 interface Props {
