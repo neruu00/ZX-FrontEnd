@@ -65,9 +65,11 @@ export default async function BookPage({ params }: Props) {
             <div>{categorys[categorys.length - 1]}</div>
           </Suspense>
           <div className="flex gap-4">
-            <Button variant="highlight" className="grow p-6">
-              <BookOpenIcon />
-              <span>몰입모드</span>
+            <Button variant="highlight" className="grow p-6" asChild>
+              <Link href={`/books/flow/${book.isbn13}`}>
+                <BookOpenIcon />
+                <span>몰입모드</span>
+              </Link>
             </Button>
             <Button variant="secondary" className="grow p-6" asChild>
               <Link href={`/books/report/${book.isbn13}`}>
