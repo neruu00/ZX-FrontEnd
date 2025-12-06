@@ -132,7 +132,7 @@ interface SevenSegmentColor {
 }
 
 export default function SevenSegmentClock({ size, activeColor, inactiveColor }: SevenSegmentColor) {
-  const [time, setTime] = useState<Date>(new Date());
+  const [time, setTime] = useState<Date | null>(null);
 
   const segmentProps = {
     size: size || 100,
@@ -141,12 +141,16 @@ export default function SevenSegmentClock({ size, activeColor, inactiveColor }: 
   };
 
   useEffect(() => {
+    setTime(new Date());
+
     const timer: NodeJS.Timeout = setInterval(() => {
       setTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
+
+  if (!time) return null;
 
   const hours: string = String(time.getHours()).padStart(2, '0');
   const minutes: string = String(time.getMinutes()).padStart(2, '0');
