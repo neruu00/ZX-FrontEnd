@@ -1,15 +1,5 @@
-import AppSidebar from '@/components/AppSidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import SidebarLayout from '@/layouts/SidebarLayout';
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      {children}
-    </SidebarProvider>
-  );
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <SidebarLayout>{children}</SidebarLayout>;
 }
