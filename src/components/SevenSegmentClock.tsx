@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 interface ColonProps {
   size?: number;
@@ -126,46 +126,38 @@ export function Colon({ size = 80, color }: ColonProps) {
 }
 
 interface SevenSegmentColor {
+  hour: number;
+  minute: number;
+  seconds: number;
   size?: number;
   activeColor?: string;
   inactiveColor?: string;
 }
 
-export default function SevenSegmentClock({ size, activeColor, inactiveColor }: SevenSegmentColor) {
-  const [time, setTime] = useState<Date | null>(null);
-
+export default function SevenSegmentClock({
+  hour,
+  minute,
+  seconds,
+  size,
+  activeColor,
+  inactiveColor,
+}: SevenSegmentColor) {
   const segmentProps = {
     size: size || 100,
     activeColor,
     inactiveColor,
   };
 
-  useEffect(() => {
-    setTime(new Date());
-
-    const timer: NodeJS.Timeout = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  if (!time) return null;
-
-  const hours: string = String(time.getHours()).padStart(2, '0');
-  const minutes: string = String(time.getMinutes()).padStart(2, '0');
-  const seconds: string = String(time.getSeconds()).padStart(2, '0');
-
   return (
     <div className="mb-4 flex items-center justify-center gap-4">
-      <Segemnt {...segmentProps} value={parseInt(hours[0])} />
-      <Segemnt {...segmentProps} value={parseInt(hours[1])} />
+      <Segemnt {...segmentProps} value={Math.floor(hour / 10)} />
+      <Segemnt {...segmentProps} value={hour % 10} />
       <Colon color={activeColor} />
-      <Segemnt {...segmentProps} value={parseInt(minutes[0])} />
-      <Segemnt {...segmentProps} value={parseInt(minutes[1])} />
+      <Segemnt {...segmentProps} value={Math.floor(minute / 10)} />
+      <Segemnt {...segmentProps} value={minute % 10} />
       <Colon color={activeColor} />
-      <Segemnt {...segmentProps} value={parseInt(seconds[0])} />
-      <Segemnt {...segmentProps} value={parseInt(seconds[1])} />
+      <Segemnt {...segmentProps} value={Math.floor(seconds / 10)} />
+      <Segemnt {...segmentProps} value={seconds % 10} />
     </div>
   );
 }
