@@ -42,9 +42,9 @@ export default function BookReportPage() {
 
       if (!resGET.ok) throw new Error('Network response was not ok');
 
-      console.log(resGET);
+      const isSaved = (await resGET.json()) ? true : false;
 
-      if (resGET) {
+      if (isSaved) {
         const resUPDATE = await fetch(url, {
           method: 'PUT',
           headers: {
@@ -82,7 +82,6 @@ export default function BookReportPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (!isbn) return;
-      console.log('fetching data for isbn:', isbn);
       try {
         setIsLoading(true);
         const response = await fetch(`/api/books/report?query=${isbn}`, {
@@ -90,9 +89,7 @@ export default function BookReportPage() {
         });
         if (!response.ok) throw new Error('Network response was not ok');
         const res = await response.json();
-        console.table(res);
         setData(res);
-        console.log('fetched data:', res);
       } catch (error) {
         console.error(error);
       } finally {
