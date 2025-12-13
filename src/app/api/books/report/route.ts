@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const client = await clientPromise;
   const db = client.db('zx_test');
 
-  const result = await db.collection('record').find({ isbn: query }).toArray();
+  const result = await db.collection('record').findOne({ isbn: query });
 
   return NextResponse.json(result);
 }
@@ -37,7 +37,32 @@ export async function POST(request: Request) {
     isbn,
     content,
     createdAt,
+    updatedAt: createdAt,
   });
+  //TODO - 응답 구체화
+  return new Response(JSON.stringify(result));
+}
+
+export async function PUT(request: Request) {
+  //TODO - 유저 검증 로직
+  console.log('UPDATE request received');
+  const res = await request.json();
+  const { isbn, content } = res;
+
+  const client = await clientPromise;
+  const db = client.db('zx_test');
+
+  const updatedAt = new Date().toISOString();
+
+  const result = db.collection('record').updateOne(
+    { isbn },
+    {
+      $set: {
+        content,
+        updatedAt,
+      },
+    },
+  );
   console.log(result);
   //TODO - 응답 구체화
   return new Response(JSON.stringify(result));

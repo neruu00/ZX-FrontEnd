@@ -12,33 +12,68 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Content } from '@tiptap/react';
+import { ObjectId } from 'mongodb';
+
+type DateType = {
+  _id: ObjectId;
+  isbn: string;
+  content: Content;
+  createdAt: string;
+  updatedAt: string;
+} | null;
 
 export default function BookReportPage() {
   const { isbn } = useParams();
-  const [data, setData] = useState<Content>(null);
-  const { editor } = useTextEditor({ content: data });
+  const [data, setData] = useState<DateType>(null);
+  const { editor } = useTextEditor({ content: data?.content || null });
   const [isLoading, setIsLoading] = useState(true);
 
   const saveRecord = async () => {
-    if (!editor) return;
+    if (!editor || !isbn) return;
+    if (confirm('저장하시겠습니까?') === false) return;
+
     const content = editor.getJSON();
-    console.log(content);
     const url = '/api/books/report';
 
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          isbn,
-          content,
-        }),
+      const resGET = await fetch(`/api/books/report?query=${isbn}`, {
+        cache: 'no-store',
       });
-      const result = await response.json();
-      console.log(result);
+
+      if (!resGET.ok) throw new Error('Network response was not ok');
+
+      console.log(resGET);
+
+      if (resGET) {
+        const resUPDATE = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            isbn,
+            content,
+          }),
+        });
+        const result = resUPDATE;
+        console.log('UPDATE result:', result);
+      } else {
+        const resPOST = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            isbn,
+            content,
+          }),
+        });
+        const result = await resPOST.json();
+        console.log('POST result:', result);
+      }
+
       //TODO - response success toast
+      alert('저장이 완료되었습니다.');
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +90,8 @@ export default function BookReportPage() {
         });
         if (!response.ok) throw new Error('Network response was not ok');
         const res = await response.json();
-        setData(res[res.length - 1]?.content);
+        console.table(res);
+        setData(res);
         console.log('fetched data:', res);
       } catch (error) {
         console.error(error);
@@ -65,10 +101,6 @@ export default function BookReportPage() {
     };
     fetchData();
   }, [isbn]);
-
-  useEffect(() => {
-    console.log('Page component data updated:', data);
-  }, [data]);
 
   if (isLoading) {
     return (
