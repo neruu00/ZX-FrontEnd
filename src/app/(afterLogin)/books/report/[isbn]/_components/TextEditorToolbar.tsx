@@ -2,6 +2,10 @@
 
 import { Editor } from '@tiptap/react';
 import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
   BoldIcon,
   Heading1,
   Heading2,
@@ -18,6 +22,7 @@ import {
 import { useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 interface Props {
   editor: Editor | null;
@@ -38,7 +43,7 @@ export default function TextEditorToolbar({ editor }: Props) {
 
   return (
     <>
-      <div className="toolbar fixed top-0 right-0 left-0 z-10 flex items-center gap-4 border-b border-zinc-800 bg-zinc-950 px-4 py-2">
+      <div className="toolbar fixed top-0 right-0 left-0 z-10 flex h-11 items-center gap-4 border-b border-zinc-800 bg-zinc-950 px-4 py-2">
         <Button
           size="icon"
           variant="ghost"
@@ -75,6 +80,9 @@ export default function TextEditorToolbar({ editor }: Props) {
         >
           <Heading3 />
         </Button>
+
+        <Separator orientation="vertical" />
+
         <Button
           size="icon"
           variant="ghost"
@@ -107,14 +115,48 @@ export default function TextEditorToolbar({ editor }: Props) {
         >
           <UnderlineIcon />
         </Button>
+
+        <Separator orientation="vertical" />
+
         <Button
           size="icon"
           variant="ghost"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? styleActive : ''}
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          className={
+            editor.isActive({ textAlign: 'justify' }) ? 'is-active' : ''
+          }
         >
-          <Quote size={16} />
+          <AlignJustify />
         </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={editor.isActive({ textAlign: 'left' }) ? 'is-active' : ''}
+        >
+          <AlignLeft />
+        </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={
+            editor.isActive({ textAlign: 'center' }) ? 'is-active' : ''
+          }
+        >
+          <AlignCenter />
+        </Button>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={editor.isActive({ textAlign: 'right' }) ? 'is-active' : ''}
+        >
+          <AlignRight />
+        </Button>
+
+        <Separator orientation="vertical" />
+
         <Button
           size="icon"
           variant="ghost"
@@ -130,6 +172,17 @@ export default function TextEditorToolbar({ editor }: Props) {
           className={editor.isActive('orderedList') ? styleActive : ''}
         >
           <ListOrdered />
+        </Button>
+
+        <Separator orientation="vertical" />
+
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+          className={editor.isActive('blockquote') ? styleActive : ''}
+        >
+          <Quote size={16} />
         </Button>
         <Button
           size="icon"

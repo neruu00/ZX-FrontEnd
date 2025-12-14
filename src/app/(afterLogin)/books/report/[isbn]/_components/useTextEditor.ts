@@ -11,6 +11,7 @@ import { BulletList, ListItem, OrderedList } from '@tiptap/extension-list';
 import Paragraph from '@tiptap/extension-paragraph';
 import Strike from '@tiptap/extension-strike';
 import Text from '@tiptap/extension-text';
+import TextAlign from '@tiptap/extension-text-align';
 import Underline from '@tiptap/extension-underline';
 import { Dropcursor, Gapcursor, Placeholder } from '@tiptap/extensions';
 import { Content, Editor, useEditor } from '@tiptap/react';
@@ -38,6 +39,9 @@ const useTextEditor = ({ content = null }: Props): Return => {
     extensions: [
       Document,
       Text,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
       Paragraph,
       Heading.configure({ levels: [1, 2, 3] }),
       Blockquote,
