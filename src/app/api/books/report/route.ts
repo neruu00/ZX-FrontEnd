@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   const client = await clientPromise;
   const db = client.db('zx_test');
 
-  const result = await db.collection('record').findOne({ isbn: query });
+  const result = await db.collection('report').findOne({ isbn: query });
 
   return NextResponse.json(result);
 }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
   const createdAt = new Date().toISOString();
 
-  const result = db.collection('record').insertOne({
+  const result = db.collection('report').insertOne({
     isbn,
     title,
     content,
@@ -55,7 +55,7 @@ export async function PUT(request: Request) {
 
   const updatedAt = new Date().toISOString();
 
-  const result = db.collection('record').updateOne(
+  const result = db.collection('report').updateOne(
     { isbn },
     {
       $set: {

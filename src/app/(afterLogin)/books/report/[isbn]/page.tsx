@@ -13,6 +13,11 @@ import { Button } from '@/components/ui/button';
 
 import TextEditorContent from './_components/TextEditorContent';
 import useTextEditor from './_components/useTextEditor';
+import {
+  getBookReport,
+  postBookReport,
+  updateBookReport,
+} from '@/services/report.api';
 
 type DateType = {
   _id: ObjectId;
@@ -23,7 +28,7 @@ type DateType = {
 } | null;
 
 export default function BookReportPage() {
-  const { isbn } = useParams();
+  const { isbn } = useParams() as { isbn?: string };
   const [data, setData] = useState<DateType>(null);
   const { editor } = useTextEditor({ content: data?.content || null });
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +39,7 @@ export default function BookReportPage() {
     console.log(e.target.value);
   };
 
-  const saveRecord = async () => {
+  const saveReport = async () => {
     if (!editor || !isbn) return;
     if (confirm('저장하시겠습니까?') === false) return;
 
@@ -44,46 +49,14 @@ export default function BookReportPage() {
     }
 
     const content = editor.getJSON();
-    const url = '/api/books/report';
 
     try {
-      const resGET = await fetch(`/api/books/report?query=${isbn}`, {
-        cache: 'no-store',
-      });
+      const resGET = await getBookReport({ isbn });
+      const isSaved = resGET ? true : false;
+      const body = { isbn, title, content };
 
-      if (!resGET.ok) throw new Error('Network response was not ok');
-
-      const isSaved = (await resGET.json()) ? true : false;
-
-      if (isSaved) {
-        const resUPDATE = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            isbn,
-            title,
-            content,
-          }),
-        });
-        const result = resUPDATE;
-        console.log('UPDATE result:', result);
-      } else {
-        const resPOST = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            isbn,
-            title,
-            content,
-          }),
-        });
-        const result = await resPOST.json();
-        console.log('POST result:', result);
-      }
+      if (isSaved) await updateBookReport(body);
+      else await postBookReport(body);
 
       //TODO - response success toast
       alert('저장이 완료되었습니다.');
@@ -97,15 +70,11 @@ export default function BookReportPage() {
       if (!isbn) return;
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/books/report?query=${isbn}`, {
-          cache: 'no-store',
-        });
-        if (!response.ok) throw new Error('Network response was not ok');
-        const res = await response.json();
+        const res = await getBookReport({ isbn: isbn as string });
         setData(res);
         setTitle(res?.title || '');
       } catch (error) {
-        console.error(error);
+        alert(error);
       } finally {
         setIsLoading(false);
       }
@@ -159,7 +128,7 @@ export default function BookReportPage() {
           </Button>
           <Button
             variant="highlight"
-            onClick={saveRecord}
+            onClick={saveReport}
             className="flex items-center justify-center gap-1"
           >
             <Save />
