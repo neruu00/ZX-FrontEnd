@@ -27,10 +27,21 @@ export default function BookReportPage() {
   const [data, setData] = useState<DateType>(null);
   const { editor } = useTextEditor({ content: data?.content || null });
   const [isLoading, setIsLoading] = useState(true);
+  const [title, setTitle] = useState('');
+
+  const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+    console.log(e.target.value);
+  };
 
   const saveRecord = async () => {
     if (!editor || !isbn) return;
     if (confirm('저장하시겠습니까?') === false) return;
+
+    if (title.trim() === '') {
+      alert('제목을 입력해주세요.');
+      return;
+    }
 
     const content = editor.getJSON();
     const url = '/api/books/report';
@@ -52,6 +63,7 @@ export default function BookReportPage() {
           },
           body: JSON.stringify({
             isbn,
+            title,
             content,
           }),
         });
@@ -65,6 +77,7 @@ export default function BookReportPage() {
           },
           body: JSON.stringify({
             isbn,
+            title,
             content,
           }),
         });
@@ -90,6 +103,7 @@ export default function BookReportPage() {
         if (!response.ok) throw new Error('Network response was not ok');
         const res = await response.json();
         setData(res);
+        setTitle(res?.title || '');
       } catch (error) {
         console.error(error);
       } finally {
@@ -117,7 +131,11 @@ export default function BookReportPage() {
       {editor && (
         <>
           <Toolbar editor={editor} />
-          <TextEditorContent editor={editor} />
+          <TextEditorContent
+            title={title}
+            onChangeTitle={onChangeTitle}
+            editor={editor}
+          />
         </>
       )}
       <div className="fixed right-0 bottom-0 left-0 z-10 flex items-center justify-between border-t bg-zinc-950 p-2">

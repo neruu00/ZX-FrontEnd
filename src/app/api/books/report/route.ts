@@ -26,7 +26,7 @@ export async function POST(request: Request) {
    * create가 아니라 update 하기
    */
   const res = await request.json();
-  const { isbn, content } = res;
+  const { isbn, title, content } = res;
 
   const client = await clientPromise;
   const db = client.db('zx_test');
@@ -35,6 +35,7 @@ export async function POST(request: Request) {
 
   const result = db.collection('record').insertOne({
     isbn,
+    title,
     content,
     createdAt,
     updatedAt: createdAt,
@@ -47,7 +48,7 @@ export async function PUT(request: Request) {
   //TODO - 유저 검증 로직
   console.log('UPDATE request received');
   const res = await request.json();
-  const { isbn, content } = res;
+  const { isbn, title, content } = res;
 
   const client = await clientPromise;
   const db = client.db('zx_test');
@@ -58,6 +59,7 @@ export async function PUT(request: Request) {
     { isbn },
     {
       $set: {
+        title,
         content,
         updatedAt,
       },
