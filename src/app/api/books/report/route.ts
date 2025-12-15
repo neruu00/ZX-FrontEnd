@@ -1,71 +1,142 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import clientPromise from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get('query');
+// mongoDB 컬렉션 가져오기
+//TODO - 공통 모듈로 분리하기
+//TODO - 에러 핸들링
+async function getCollection(collectionName: string) {
+  const client = await clientPromise;
+  const db = client.db('zx_test');
+  return db.collection(collectionName);
+}
 
-  if (!query) {
-    return NextResponse.json({ error: '검색어가 없습니다.' }, { status: 400 });
+//SECTION - 독후감(Report) 조회(GET)
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
+  const isbn = searchParams.get('isbn');
+
+  if (!isbn) {
+    return NextResponse.json({ error: 'isbn이 없습니다.' }, { status: 400 });
   }
 
-  const client = await clientPromise;
-  const db = client.db('zx_test');
-
-  const result = await db.collection('report').findOne({ isbn: query });
-
-  return NextResponse.json(result);
+  try {
+    const collection = await getCollection('report');
+    const result = await collection.findOne({ isbn });
+    return NextResponse.json(result);
+  } catch (error) {
+    return NextResponse.json(
+      { error: '서버 에러가 발생했습니다.' },
+      { status: 500 },
+    );
+  }
 }
+//!SECTION - 독후감(Report) 조회(GET)
 
-export async function POST(request: Request) {
+//SECTION - 독후감(Report) 생성(POST)
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { isbn, title, content } = body;
+
   //TODO - 유저 검증 로직
-  /**
-   * TODO
-   * 이미 존재하는 독후감일 경우
-   * create가 아니라 update 하기
-   */
-  const res = await request.json();
-  const { isbn, title, content } = res;
 
-  const client = await clientPromise;
-  const db = client.db('zx_test');
+  if (!isbn) {
+    return NextResponse.json(
+      { message: 'isbn이 누락되었습니다.' },
+      { status: 400 },
+    );
+  }
+  if (!title) {
+    return NextResponse.json(
+      { message: '제목을 입력해주세요.' },
+      { status: 400 },
+    );
+  }
+  if (!content) {
+    return NextResponse.json(
+      { message: '내용을 입력해주세요' },
+      { status: 400 },
+    );
+  }
 
-  const createdAt = new Date().toISOString();
+  try {
+    const collection = await getCollection('report');
+    const now = new Date().toISOString();
+    const newReport = {
+      isbn,
+      title,
+      content,
+      createdAt: now,
+      updatedAt: now,
+    };
 
-  const result = db.collection('report').insertOne({
-    isbn,
-    title,
-    content,
-    createdAt,
-    updatedAt: createdAt,
-  });
-  //TODO - 응답 구체화
-  return new Response(JSON.stringify(result));
+    const result = await collection.insertOne(newReport);
+    return NextResponse.json(
+      { message: '독후감을 저장했습니다.', id: result.insertedId },
+      { status: 201 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: '서버 에러가 발생했습니다.' },
+      { status: 500 },
+    );
+  }
 }
+//!SECTION - 독후감(Report) 생성(POST)
 
-export async function PUT(request: Request) {
+//SECTION - 독후감(Report) 수정(UPDATE)
+export async function PATCH(request: NextRequest) {
+  const body = await request.json();
+  const { _id, title, content } = body;
+
   //TODO - 유저 검증 로직
-  console.log('UPDATE request received');
-  const res = await request.json();
-  const { isbn, title, content } = res;
 
-  const client = await clientPromise;
-  const db = client.db('zx_test');
+  if (!_id) {
+    return NextResponse.json(
+      { message: '저장할 독후감의 id가 누락되었습니다.' },
+      { status: 400 },
+    );
+  }
+  if (!title) {
+    return NextResponse.json(
+      { message: '제목을 입력해주세요.' },
+      { status: 400 },
+    );
+  }
+  if (!content) {
+    return NextResponse.json(
+      { message: '내용을 입력해주세요' },
+      { status: 400 },
+    );
+  }
 
-  const updatedAt = new Date().toISOString();
-
-  const result = db.collection('report').updateOne(
-    { isbn },
-    {
-      $set: {
-        title,
-        content,
-        updatedAt,
+  try {
+    const collection = await getCollection('report');
+    const result = await collection.updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: {
+          title,
+          content,
+          updatedAt: new Date().toISOString(),
+        },
       },
-    },
-  );
-  console.log(result);
-  //TODO - 응답 구체화
-  return new Response(JSON.stringify(result));
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json(
+        { message: '해당 게시물을 찾을 수 없습니다.' },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ message: '수정이 완료되었습니다.' });
+  } catch (error) {
+    return NextResponse.json(
+      { message: '수정 중 오류가 발생했습니다.' },
+      { status: 500 },
+    );
+  }
 }
+//!SECTION - 독후감(Report) 수정(UPDATE)

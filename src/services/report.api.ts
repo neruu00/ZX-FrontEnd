@@ -1,4 +1,5 @@
 import { Content } from '@tiptap/react';
+import { ObjectId } from 'mongodb';
 
 //TODO - isbn 검증 함수 구현
 //TODO - 에러 핸들링 구체화
@@ -11,7 +12,7 @@ import { Content } from '@tiptap/react';
 
 export async function getBookReport({ isbn }: { isbn: string }) {
   try {
-    const response = await fetch(`/api/books/report?query=${isbn}`, {
+    const response = await fetch(`/api/books/report?isbn=${isbn}`, {
       cache: 'no-store',
     });
     if (!response.ok) throw new Error('Network response was not ok');
@@ -52,11 +53,11 @@ export async function postBookReport({
 }
 
 export async function updateBookReport({
-  isbn,
+  _id,
   title,
   content,
 }: {
-  isbn: string;
+  _id: string;
   title: string;
   content: Content;
 }) {
@@ -64,12 +65,12 @@ export async function updateBookReport({
 
   try {
     const response = await fetch(url, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        isbn,
+        _id,
         title,
         content,
       }),

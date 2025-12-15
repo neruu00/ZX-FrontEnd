@@ -20,7 +20,7 @@ import TextEditorContent from './_components/TextEditorContent';
 import useTextEditor from './_components/useTextEditor';
 
 type DateType = {
-  _id: ObjectId;
+  _id: string;
   isbn: string;
   content: Content;
   createdAt: string;
@@ -35,32 +35,42 @@ export default function BookReportPage() {
   const [title, setTitle] = useState('');
 
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    /**
+     * TODO - 제목 유효성 검사
+     * 1. 길이 제한
+     * 2. 특수문자 필터링
+     */
     setTitle(e.target.value);
-    console.log(e.target.value);
   };
 
   const saveReport = async () => {
     if (!editor || !isbn) return;
-    if (confirm('저장하시겠습니까?') === false) return;
-
     if (title.trim() === '') {
       alert('제목을 입력해주세요.');
       return;
     }
+    if (confirm('저장하시겠습니까?') === false) return;
 
     const content = editor.getJSON();
 
+    //TODO - 로딩 상태 관리
+    //TODO - 에러 핸들링
+    //TODO - 변경사항 없을 시 저장 방지
+
     try {
-      const resGET = await getBookReport({ isbn });
-      const isSaved = resGET ? true : false;
-      const body = { isbn, title, content };
+      if (data) {
+        const body = { _id: data._id, title, content };
+        await updateBookReport(body);
+      } else {
+        const body = { isbn, title, content };
+        await postBookReport(body);
+      }
 
-      if (isSaved) await updateBookReport(body);
-      else await postBookReport(body);
-
-      //TODO - response success toast
+      //TODO - 토스트 알림으로 변경
       alert('저장이 완료되었습니다.');
     } catch (error) {
+      //TODO - 에러타입 구체화 및 toast
+      alert('저장 중 오류가 발생했습니다.');
       console.error(error);
     }
   };
@@ -71,8 +81,10 @@ export default function BookReportPage() {
       try {
         setIsLoading(true);
         const res = await getBookReport({ isbn: isbn as string });
-        setData(res);
-        setTitle(res?.title || '');
+        if (res) {
+          setData({ _id: (res._id as ObjectId).toString(), ...res });
+          setTitle(res.title || '');
+        }
       } catch (error) {
         alert(error);
       } finally {
