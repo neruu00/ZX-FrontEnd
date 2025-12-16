@@ -3,6 +3,17 @@ import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 
 import './globals.css';
+import { MSWProvider } from '@/mocks/MSWcomponents';
+
+// sercer-side MSW 설정
+if (
+  process.env.NEXT_RUNTIME === 'nodejs' &&
+  process.env.NEXT_ENV !== 'production'
+) {
+  console.log('서버 사이드 MSW 설정');
+  const { server } = await import('@/mocks/http');
+  server.listen();
+}
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,14 +28,16 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className="bg-background antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <MSWProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </MSWProvider>
       </body>
     </html>
   );
