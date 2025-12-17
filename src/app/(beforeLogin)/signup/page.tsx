@@ -41,7 +41,7 @@ export default function SignupPage() {
         <div className="flex flex-col gap-2">
           <label htmlFor="password">비밀번호</label>
           <input
-            type="password"
+            type="text"
             id="password"
             name="password"
             placeholder="비밀번호를 입력하세요..."
@@ -50,7 +50,7 @@ export default function SignupPage() {
         <div className="flex flex-col gap-2">
           <label htmlFor="passwordConfirm">비밀번호 확인</label>
           <input
-            type="password"
+            type="text"
             id="passwordConfirm"
             name="passwordConfirm"
             placeholder="비밀번호를 다시 입력하세요..."

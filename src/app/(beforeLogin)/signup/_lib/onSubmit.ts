@@ -28,24 +28,23 @@ export default async function onSubmit(
   }
 
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/signup`;
     console.log(url);
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
       credentials: 'include',
     });
-    if (!response.ok) {
-      return { message: '회원가입에 실패했습니다.' };
-    }
+    const message = await response.json();
+
     if (response.status === 403) {
-      return { message: '이미 존재하는 이메일입니다.' };
+      return { message };
     }
+    return { message: '회원가입에 성공했습니다.' };
   } catch (error) {
     console.error(error);
     return { message: '회원가입에 실패했습니다.' };
   }
 
-  redirect('/home');
-  return { message: '회원가입에 성공했습니다.' };
+  // redirect('/home');
 }
