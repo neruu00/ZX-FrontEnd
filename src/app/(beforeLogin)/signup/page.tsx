@@ -21,6 +21,15 @@ export default function SignupPage() {
         action={formAction}
       >
         <div className="flex flex-col gap-2">
+          <label htmlFor="email">아이디</label>
+          <input
+            type="text"
+            id="id"
+            name="id"
+            placeholder="아이디를 입력하세요..."
+          />
+        </div>
+        <div className="flex flex-col gap-2">
           <label htmlFor="email">이메일</label>
           <input
             type="email"

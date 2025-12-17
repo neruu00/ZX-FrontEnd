@@ -1,16 +1,18 @@
 'use server';
 
-import { redirect } from 'next/navigation';
-
 export default async function onSubmit(
   currentState: { message: string | null },
   formData: FormData,
 ) {
+  const id = formData.get('id');
   const email = formData.get('email');
   const name = formData.get('name');
   const password = formData.get('password');
   const passwordConfirm = formData.get('passwordConfirm');
 
+  if (!id) {
+    return { message: '아이디를 입력하세요.' };
+  }
   if (!email) {
     return { message: '이메일을 입력하세요.' };
   }
