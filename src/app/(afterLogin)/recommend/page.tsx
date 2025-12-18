@@ -3,36 +3,22 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-
-async function getBooksRecommended() {
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/search/book/aladin`;
-  const response = await fetch(url, {
-    method: 'GET',
-    next: {
-      tags: ['books', 'recommended'],
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch data');
-  }
-
-  return await response.json();
-}
+import BookRecommendedContainer from './_components/BookRecommendedContainer';
+import { fetchBookListProxy } from '@/lib/aladin.api';
 
 export default async function RecommendPage() {
   const queryClient = new QueryClient();
   const dehydratedState = dehydrate(queryClient);
   await queryClient.prefetchQuery({
     queryKey: ['books'],
-    queryFn: getBooksRecommended,
+    queryFn: fetchBookListProxy,
   });
 
   return (
-    <main className="m-auto w-[920px] p-4">
-      <h1>Library Page</h1>
+    <main className="m-auto min-h-dvh w-[920px] p-4">
+      <h1>Books Recommended Page</h1>
       <HydrationBoundary state={dehydratedState}>
-        {/* <Book /> */}
+        <BookRecommendedContainer />
       </HydrationBoundary>
     </main>
   );

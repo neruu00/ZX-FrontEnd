@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+import { mockBookList } from './mockBookList';
 
 const User = [
   {
@@ -37,5 +38,12 @@ export const handlers = [
         'Set-Cookie': 'connect.sid=msw-cookie;HttpOnly;Path=/',
       },
     });
+  }),
+  http.get(`${baseUrl}/api/open/book/aladin/list`, async ({ request }) => {
+    console.log('베스트셀러 불러오기');
+    // return HttpResponse.text(JSON.stringify('user_exists'), {
+    //   status: 403,
+    // });
+    return HttpResponse.json(mockBookList);
   }),
 ];
