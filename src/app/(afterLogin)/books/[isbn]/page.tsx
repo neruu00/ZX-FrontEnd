@@ -21,7 +21,6 @@ export default async function BookPage({ params }: Props) {
   try {
     const result = await fetchBookDetail(isbn);
     book = (Array.isArray(result) ? result[0] : result) as BookLookUpResponse;
-    console.log(book);
   } catch (error) {
     console.error(error);
   }

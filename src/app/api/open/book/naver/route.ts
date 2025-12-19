@@ -31,8 +31,6 @@ export async function GET(request: Request) {
 
   const url = `https://openapi.naver.com/v1/search/book_adv.xml?${params.toString()}`;
 
-  console.log(url);
-
   try {
     const res = await fetch(url, {
       method: 'GET',
@@ -41,8 +39,6 @@ export async function GET(request: Request) {
         'X-Naver-Client-Secret': clientSecret,
       },
     });
-
-    console.log(res);
 
     if (!res.ok) {
       throw new Error(`네이버 API 오류: ${res.status}`);

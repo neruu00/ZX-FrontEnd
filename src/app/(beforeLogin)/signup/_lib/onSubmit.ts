@@ -33,7 +33,6 @@ export default async function onSubmit(
 
   try {
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/signup`;
-    console.log(url);
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
