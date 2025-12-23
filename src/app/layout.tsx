@@ -8,7 +8,8 @@ import './globals.css';
 // server-side MSW 설정
 if (
   process.env.NEXT_RUNTIME === 'nodejs' &&
-  process.env.NEXT_ENV !== 'production'
+  process.env.NEXT_ENV !== 'production' &&
+  process.env.MSW_ENABLED !== 'false'
 ) {
   console.log('서버 사이드 MSW 설정');
   const { server } = await import('@/mocks/http');

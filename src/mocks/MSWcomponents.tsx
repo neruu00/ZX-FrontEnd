@@ -8,11 +8,14 @@ const mockingEnabledPromise =
   // client-side MSW 설정
   typeof window !== 'undefined'
     ? import('@/mocks/browser').then(async ({ default: worker }) => {
-        console.log('클라이언트 사이드 MSW 설정');
         //NOTE - 프로덕션 환경에서는 MSW 비활성화
-        if (process.env.NODE_ENV !== 'production') {
+        if (
+          process.env.NODE_ENV !== 'production' ||
+          process.env.MSW_ENABLED === 'false'
+        ) {
           return;
         }
+        console.log('클라이언트 사이드 MSW 설정');
         await worker.start({
           onUnhandledRequest(request, print) {
             //NOTE - _next 경로는 무시
