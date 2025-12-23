@@ -6,11 +6,10 @@ import { useFormStatus } from 'react-dom';
 
 import { Button } from '@/components/ui/button';
 
-import onSubmit from './_lib/onSubmit';
-
+import signup from './_lib/signup';
 
 export default function SignupPage() {
-  const [state, formAction] = useActionState(onSubmit, {
+  const [state, formAction] = useActionState(signup, {
     message: '',
   });
   const { pending } = useFormStatus();

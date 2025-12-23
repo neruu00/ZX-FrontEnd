@@ -14,7 +14,7 @@ const options = {
   timeoutMS: 30000,
 };
 
-let client;
+let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
 if (process.env.NODE_ENV === 'development') {
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   /**
    * NOTE
-   * 배포(Production) 환경에서는 매번 새로운 연결을 만듭니다.
+   * 배포(Production) 환경에서는 매번 새로운 연결.
    */
   client = new MongoClient(uri, options);
   clientPromise = client.connect();

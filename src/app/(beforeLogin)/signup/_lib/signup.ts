@@ -2,7 +2,7 @@
 
 import { signIn } from '@/auth';
 
-export default async function onSubmit(
+export default async function signup(
   currentState: { message: string | null },
   formData: FormData,
 ) {

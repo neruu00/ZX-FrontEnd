@@ -5,12 +5,19 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export default function LoginPage() {
   const [message, setMessage] = useState('');
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
+  const handleGoogleLogin = () => {
+    signIn('google', {
+      callbackUrl: '/home',
+    });
+  };
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -55,10 +62,12 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div>
-          <Button type="submit">로그인</Button>
-          <div className="text-destructive">{message}</div>
-        </div>
+        <Button type="submit">로그인</Button>
+        <div className="text-destructive">{message}</div>
+        <Separator />
+        <Button key={id} onClick={handleGoogleLogin}>
+          Google로 로그인
+        </Button>
       </form>
     </div>
   );
