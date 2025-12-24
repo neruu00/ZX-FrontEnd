@@ -35,6 +35,30 @@ export const {
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent',
+          access_type: 'offline',
+          response_type: 'code',
+        },
+      },
     }),
   ],
+  callbacks: {
+    // 1. JWT 생성 및 갱신 시 실행
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id; // User ID를 토큰에 저장
+      }
+      return token;
+    },
+
+    // 2. 클라이언트에서 세션 조회(useSession) 시 실행
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
 });
