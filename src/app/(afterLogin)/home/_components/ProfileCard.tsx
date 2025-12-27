@@ -2,6 +2,14 @@ import { auth } from '@/auth';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, AtSignIcon, Calendar } from 'lucide-react';
+import ProfileImage from '@/../public/default-profile.png';
+
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
+dayjs.extend(relativeTime);
 
 export default async function ProfileCard() {
   const session = await auth();
@@ -29,8 +37,9 @@ export default async function ProfileCard() {
       <div className="flex items-center gap-4">
         <div className="relative size-25.5 overflow-hidden rounded-sm">
           <ImageWithFallback
-            className="size-full"
-            src={session?.user?.image || ''}
+            className="size-full object-cover"
+            // src={session?.user?.image || ''}
+            src={ProfileImage.src}
             alt={session?.user?.name || 'user profile cover'}
           />
         </div>
@@ -59,7 +68,7 @@ export default async function ProfileCard() {
                 가입일
               </span>
               <span className="text-text-neutral-tertiary text-xs leading-none">
-                {'2000.07.29.'}
+                {dayjs(session?.user?.createdAt).format('YYYY년 MM월 DD일')}
               </span>
             </div>
           </div>
@@ -68,6 +77,7 @@ export default async function ProfileCard() {
       {/* !SECTION - content */}
 
       {/* SECTION - footer */}
+      {/* TODO - 완독 및 독서 시간 비동기 데이터 적용 */}
       <div className="flex justify-end gap-2.5">
         <div className="flex items-center gap-2 px-1.5 py-1">
           <span className="text-text-neutral-tertiary text-xl leading-none font-semibold">
