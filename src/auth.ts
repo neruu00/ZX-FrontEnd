@@ -46,20 +46,18 @@ export const {
     }),
   ],
   events: {
-    async signIn({ user, account, profile, isNewUser }) {
-      if (isNewUser) {
-        const collection = await getCollection('users');
-        collection.updateOne(
-          {
-            _id: new ObjectId(user.id),
+    async createUser({ user }) {
+      const collection = await getCollection('users');
+      collection.updateOne(
+        {
+          _id: new ObjectId(user.id),
+        },
+        {
+          $set: {
+            createdAt: new Date(),
           },
-          {
-            $set: {
-              createdAt: new Date(),
-            },
-          },
-        );
-      }
+        },
+      );
     },
   },
   callbacks: {
