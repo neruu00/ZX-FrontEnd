@@ -67,6 +67,7 @@ export const {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id; // User ID를 토큰에 저장
+        token.createdAt = user.createdAt;
       }
       return token;
     },
@@ -75,6 +76,7 @@ export const {
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.createdAt = token.createdAt as Date;
       }
       return session;
     },
