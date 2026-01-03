@@ -8,10 +8,9 @@ import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 
 interface Props {
   placeholder?: string;
-  offset?: number;
 }
 
-export default function SearchField({ placeholder = '', offset = 0 }: Props) {
+export default function SearchField({ placeholder = '' }: Props) {
   const [keyword, setKeyword] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -98,7 +97,7 @@ export default function SearchField({ placeholder = '', offset = 0 }: Props) {
             'absolute z-10',
             'min-h-80 w-full',
             'bg-background-primary rounded-2xl',
-            `translate-y-${offset}`,
+            `translate-y-1`,
           ])}
         />
       ) : null}

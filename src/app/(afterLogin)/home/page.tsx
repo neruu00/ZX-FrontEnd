@@ -8,10 +8,7 @@ export default function HomePage() {
   return (
     <PageContainer as="main">
       <div className="flex justify-center pb-5">
-        <SearchField
-          placeholder="책 제목, 저자, 장르를 입력해주세요..."
-          offset={2}
-        />
+        <SearchField placeholder="책 제목, 저자, 장르를 입력해주세요..." />
       </div>
       <div className="flex gap-4">
         <div className="flex grow flex-col">
