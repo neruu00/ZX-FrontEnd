@@ -1,7 +1,14 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, BookOpenIcon, FileText, ShoppingCart } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  ArrowLeft,
+  BookOpenIcon,
+  FileText,
+  PlusIcon,
+  ShoppingCart,
+  XIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
@@ -12,13 +19,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchBookDetailProxy } from '@/lib/aladin.api';
 import { BookListResponse, BookSearchResponse } from '@/types/aladin.type';
+import { getLibrary, postLibrary } from '@/services/library.api';
 
 export default function BookDetailPage() {
   const { isbn } = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery<BookSearchResponse | undefined>({
+  const { data: book, isLoading: isBookLoading } = useQuery<
+    BookSearchResponse | undefined
+  >({
     queryKey: ['book', isbn],
     queryFn: async () => {
       if (typeof isbn !== 'string') return undefined;
@@ -46,13 +56,24 @@ export default function BookDetailPage() {
     enabled: !!isbn,
   });
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (!data) return notFound();
+  const { data: library, isLoading: isLibraryLoading } = useQuery({
+    queryKey: ['library'],
+    queryFn: getLibrary,
+  });
 
-  const title = data.title.split('-')[0].trim();
-  const author = data.author.split(',')[0].replace('(지은이)', '').trim();
-  const categorys = data.categoryName.split('>') as string[];
-  const cover = data.cover.replace('cover200', 'cover500');
+  const { mutate } = useMutation({
+    mutationFn: postLibrary,
+  });
+
+  if (isBookLoading) return <div>로딩중...</div>;
+  if (!book) return notFound();
+
+  const title = book.title.split('-')[0].trim();
+  const author = book.author.split(',')[0].replace('(지은이)', '').trim();
+  const categorys = book.categoryName.split('>') as string[];
+  const cover = book.cover.replace('cover200', 'cover500');
+  const isBookInLibrary =
+    !!library && library.some((l) => l.isbn13 === book.isbn13);
 
   return (
     <main className="mx-auto w-[920px] p-4">
@@ -76,28 +97,42 @@ export default function BookDetailPage() {
             className="flex items-center gap-4 p-6"
             asChild
           >
-            <Link href={data.link} target="_blank">
+            <Link href={book.link} target="_blank">
               <ShoppingCart />
               <span>구매하기</span>
             </Link>
           </Button>
+          {!isLibraryLoading && !isBookInLibrary ? (
+            <Button
+              className="flex items-center gap-4 p-6"
+              onClick={() => mutate(book)}
+            >
+              <PlusIcon size={16} />
+              <span>서재에 추가하기</span>
+            </Button>
+          ) : (
+            <Button className="flex items-center gap-4 p-6">
+              <XIcon size={16} />
+              <span>서재에서 제거하기</span>
+            </Button>
+          )}
         </div>
         <div className="flex flex-col gap-4">
           <h1 className="text-5xl">{title}</h1>
           <h2 className="text-xl">{author}</h2>
-          <StarScore value={data.customerReviewRank} />
+          <StarScore value={book.customerReviewRank} />
           <Suspense fallback={<div>로딩중...</div>}>
             <div>{categorys[categorys.length - 1]}</div>
           </Suspense>
           <div className="flex gap-4">
             <Button variant="highlight" className="grow p-6" asChild>
-              <Link href={`/books/flow/${data.isbn13}`}>
+              <Link href={`/books/flow/${book.isbn13}`}>
                 <BookOpenIcon />
                 <span>몰입모드</span>
               </Link>
             </Button>
             <Button variant="secondary" className="grow p-6" asChild>
-              <Link href={`/books/report/${data.isbn13}`}>
+              <Link href={`/books/report/${book.isbn13}`}>
                 <FileText />
                 <span>독후감</span>
               </Link>
@@ -110,7 +145,7 @@ export default function BookDetailPage() {
                 <span>책 설명</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>{data.description}</CardContent>
+            <CardContent>{book.description}</CardContent>
           </Card>
         </div>
       </div>
