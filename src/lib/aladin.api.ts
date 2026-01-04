@@ -1,8 +1,4 @@
-import {
-  BookListResponse,
-  BookLookUpResponse,
-  BookSearchResponse,
-} from '@/types/aladin.type';
+import { BookListResponse, BookLookUpResponse } from '@/types/aladin.type';
 
 const key = process.env.ALADIN_API_TTBKEY;
 
@@ -54,7 +50,7 @@ const fetchBookDetailProxy = async (
 
     const data = await res.json();
 
-    return data.item;
+    return data.item[0];
   } catch (error) {
     console.error(error);
   }
