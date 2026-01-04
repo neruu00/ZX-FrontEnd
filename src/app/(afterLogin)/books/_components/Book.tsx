@@ -14,22 +14,24 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { BookSearchResponse } from '@/types/aladin.type';
+import { useSearchParams } from 'next/navigation';
 
 interface Props {
   book: BookSearchResponse;
 }
 
 export default function Book({ book }: Props) {
-  const { title, author, isbn13: isbn, cover, customerReviewRank } = book;
+  const searchParams = useSearchParams();
+  const keyword = searchParams.get('keyword');
 
-  // const handleSearch = async () => {
-  //   if (!isbn) return;
-  //   if (confirm('search?')) searchBook.aladin(isbn);
-  // };
+  const { isbn13: isbn, cover, customerReviewRank } = book;
+
+  const title = book.title.split('-')[0].trim();
+  const author = book.author.split(',')[0].replace('(지은이)', '').trim();
 
   return (
     <Link
-      href={`/books/${isbn}`}
+      href={`/books/${isbn}${keyword ? `?keyword=${keyword}` : ''}`}
       className="group/card relative aspect-2/3 overflow-hidden transition-transform duration-300 hover:scale-105"
     >
       <ImageWithFallback

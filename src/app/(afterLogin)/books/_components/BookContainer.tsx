@@ -1,5 +1,4 @@
-import { userData } from '@/mocks/user';
-import { BookListResponse, BookSearchResponse } from '@/types/aladin.type';
+import { BookListResponse } from '@/types/aladin.type';
 
 import Book from './Book';
 
