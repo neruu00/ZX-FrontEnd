@@ -8,7 +8,7 @@ import { fetchBookSearchProxy } from '@/lib/aladin.api';
 
 import BookContainer from '../_components/BookContainer';
 
-export default function LibraryPage() {
+export default function SearchBookPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('keyword');
   const isEnabledQuery = !!query && query.length > 1;
