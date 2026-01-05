@@ -1,8 +1,10 @@
 import { auth } from '@/auth';
 import { getCollection } from '@/lib/mongodb';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextResponse) {
+export async function GET(request: NextRequest) {
+  console.log('✈️ ROUTE: GET library');
+
   const session = await auth();
   const userId = session?.user.id;
 
@@ -22,7 +24,9 @@ export async function GET(request: NextResponse) {
   }
 }
 
-export async function POST(request: NextResponse) {
+export async function POST(request: NextRequest) {
+  console.log('✈️ ROUTE: POST library');
+
   const session = await auth();
   const userId = session?.user.id;
 
@@ -54,6 +58,16 @@ export async function POST(request: NextResponse) {
 
   try {
     const collection = await getCollection('librarys');
+
+    const exists = await collection.findOne({ userId, isbn13 });
+
+    if (exists) {
+      return NextResponse.json(
+        { message: '이미 서재에 있습니다.' },
+        { status: 409 },
+      );
+    }
+
     const result = await collection.insertOne(docBody);
     return NextResponse.json(
       { message: '서재에 책을 추가했습니다.', id: result.insertedId },

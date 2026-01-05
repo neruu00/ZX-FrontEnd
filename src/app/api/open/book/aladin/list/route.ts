@@ -1,7 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
-  const ttbKey = process.env.ALADIN_API_TTBKEY;
+const ttbKey = process.env.ALADIN_API_TTBKEY;
+
+export async function GET(request: NextRequest) {
+  console.log('✈️ ROUTE: GET aladin list');
 
   if (!ttbKey) {
     return NextResponse.json(
