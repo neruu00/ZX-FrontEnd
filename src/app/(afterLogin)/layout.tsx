@@ -1,7 +1,7 @@
 import { SessionProvider } from 'next-auth/react';
 
 import ReactQueryProvider from '@/components/ReactQueryProvider';
-import SidebarLayout from '@/layouts/SidebarLayout';
+import Sidebar from '@/components/Sidebar';
 
 export default async function Layout({
   children,
@@ -9,7 +9,7 @@ export default async function Layout({
   return (
     <SessionProvider>
       <ReactQueryProvider>
-        <SidebarLayout>{children}</SidebarLayout>
+        <Sidebar>{children}</Sidebar>
       </ReactQueryProvider>
     </SessionProvider>
   );
