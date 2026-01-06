@@ -1,20 +1,26 @@
 'use client';
 
-import { useSidebarStore } from '@/stores/useSidebarStore';
 import {
   BarChart2Icon,
   BookIcon,
   ChevronRight,
   HomeIcon,
   MailIcon,
+  Moon,
+  Sun,
 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
-import { Separator } from '../ui/separator';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+
 import DefaultProfile from '@/../public/default-profile.png';
-import Image from 'next/image';
+
+import { cn } from '@/lib/utils';
+import { useSidebarStore } from '@/stores/useSidebarStore';
+
+import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
+import { useTheme } from 'next-themes';
 
 interface Props {
   children: React.ReactNode;
@@ -24,6 +30,7 @@ export default function Sidebar({ children }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const { isOpen, toggle } = useSidebarStore();
+  const { setTheme, resolvedTheme: theme } = useTheme();
   const session = useSession();
   const user = session.data?.user;
 
@@ -34,6 +41,10 @@ export default function Sidebar({ children }: Props) {
     await signOut({ redirect: false }).then(() => {
       router.push('/');
     });
+  };
+
+  const onClickTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
@@ -114,7 +125,12 @@ export default function Sidebar({ children }: Props) {
           </SidebarButton>
         </div>
         <Separator />
-        <div className="flex flex-col p-3.5">
+        <div className="flex flex-col gap-2 p-3.5">
+          <SidebarButton className="p-0 py-2" onClick={onClickTheme}>
+            <Sun className="dark:hidden" />
+            <Moon className="hidden dark:block" />
+            <span>테마 변경</span>
+          </SidebarButton>
           <SidebarButton className="p-0" onClick={onLogout} open={isOpen}>
             <div className="relative size-9 overflow-hidden rounded-full border">
               <Image
