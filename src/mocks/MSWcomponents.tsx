@@ -10,7 +10,7 @@ const mockingEnabledPromise =
     ? import('@/mocks/browser').then(async ({ default: worker }) => {
         //NOTE - 프로덕션 환경에서는 MSW 비활성화
         if (
-          process.env.NODE_ENV !== 'production' ||
+          process.env.NODE_ENV === 'production' ||
           process.env.MSW_ENABLED === 'false'
         ) {
           return;
