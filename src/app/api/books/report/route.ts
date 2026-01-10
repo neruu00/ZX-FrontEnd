@@ -8,7 +8,7 @@ import { getCollection } from '@/lib/mongodb';
 export async function GET(request: NextRequest) {
   const session = await auth();
   const { searchParams } = request.nextUrl;
-  const isbn = searchParams.get('isbn');
+  const isbn13 = searchParams.get('isbn13');
 
   if (!session) {
     return NextResponse.json(
@@ -17,13 +17,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  if (!isbn) {
-    return NextResponse.json({ error: 'isbn이 없습니다.' }, { status: 400 });
+  if (!isbn13) {
+    return NextResponse.json({ error: 'isbn13이 없습니다.' }, { status: 400 });
   }
 
   try {
     const collection = await getCollection('reports');
-    const result = await collection.findOne({ userId: session?.user.id, isbn });
+    const result = await collection.findOne({
+      userId: session?.user.id,
+      isbn13,
+    });
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
@@ -38,7 +41,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const session = await auth();
   const body = await request.json();
-  const { isbn, title, content } = body;
+  const { isbn13, title, content } = body;
 
   //TODO - 유저 검증 로직
 
@@ -48,9 +51,9 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
-  if (!isbn) {
+  if (!isbn13) {
     return NextResponse.json(
-      { message: 'isbn이 누락되었습니다.' },
+      { message: 'isbn13이 누락되었습니다.' },
       { status: 400 },
     );
   }
@@ -72,7 +75,7 @@ export async function POST(request: NextRequest) {
     const now = new Date().toISOString();
     const newReport = {
       userId: session?.user.id,
-      isbn,
+      isbn13,
       title,
       content,
       createdAt: now,
@@ -155,3 +158,50 @@ export async function PATCH(request: NextRequest) {
   }
 }
 //!SECTION - 독후감(Report) 수정(UPDATE)
+
+//SECTION - 독후감(Report) 삭제(DELETE)
+export async function DELETE(request: NextRequest) {
+  console.log('✈️ ROUTE: DELETE report');
+  const session = await auth();
+  const { searchParams } = request.nextUrl;
+  const isbn13 = searchParams.get('isbn13');
+
+  if (!session) {
+    return NextResponse.json(
+      { message: '로그인이 필요합니다.' },
+      { status: 401 },
+    );
+  }
+  if (!isbn13) {
+    return NextResponse.json(
+      { message: 'isbn13이 누락되었습니다.' },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const collection = await getCollection('reports');
+    const result = await collection.deleteOne({
+      userId: session?.user.id,
+      isbn13,
+    });
+
+    if (result.deletedCount === 0) {
+      return NextResponse.json(
+        { message: '삭제할 독후감을 찾을 수 없습니다.' },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      { message: '독후감을 삭제했습니다.' },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { error: '서버 에러가 발생했습니다.' },
+      { status: 500 },
+    );
+  }
+}
+//!SECTION - 독후감(Report) 삭제(DELETE)
