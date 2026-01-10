@@ -2,7 +2,7 @@
 
 import { Suspense, use } from 'react';
 
-const mockingEnabledPromise =
+const mswPromise =
   typeof window !== 'undefined'
     ? Promise.all([
         import('@/mocks/browser'),
@@ -11,7 +11,7 @@ const mockingEnabledPromise =
         // 프로덕션 환경에서는 MSW 비활성화
         if (
           process.env.NODE_ENV === 'production' ||
-          process.env.MSW_ENABLED === 'false'
+          process.env.NEXT_PUBLIC_MSW_ENABLED === 'false'
         ) {
           return;
         }
@@ -58,6 +58,6 @@ function MSWProviderWrapper({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  use(mockingEnabledPromise);
+  use(mswPromise);
   return children;
 }
