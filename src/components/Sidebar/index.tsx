@@ -134,7 +134,7 @@ export default function Sidebar({ children }: Props) {
         </div>
         <Separator />
         <div className="flex flex-col gap-2 p-3.5">
-          <SidebarButton className="p-0 py-2" onClick={onClickTheme}>
+          <SidebarButton onClick={onClickTheme} open={isOpen}>
             <Sun className="dark:hidden" />
             <Moon className="hidden dark:block" />
             <span>테마 변경</span>
