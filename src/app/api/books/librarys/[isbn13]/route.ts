@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { getCollection } from '@/lib/mongodb';
+import { clientPromise, getCollection } from '@/lib/mongodb';
 
 type Params = {
   params: Promise<{
-    isbn: string;
+    isbn13: string;
   }>;
 };
 
 export async function GET(request: NextRequest, { params }: Params) {
-  console.log('✈️ ROUTE: GET library isbn');
+  console.log('✈️ ROUTE: GET library isbn13');
 
   const session = await auth();
   const userId = session?.user.id;
-  const { isbn: isbn13 } = await params;
+  const { isbn13 } = await params;
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 }
 
 export async function POST(request: NextRequest) {
-  console.log('✈️ ROUTE: POST library isbn');
+  console.log('✈️ ROUTE: POST library isbn13');
 
   const session = await auth();
   const userId = session?.user.id;
@@ -81,29 +81,58 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Params) {
-  console.log('✈️ ROUTE: DELETE library isbn');
+  console.log('✈️ ROUTE: DELETE library isbn13');
 
   const session = await auth();
   const userId = session?.user.id;
-  const { isbn: isbn13 } = await params;
+  const { isbn13 } = await params;
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  try {
-    const collection = await getCollection('librarys');
+  const client = await clientPromise;
+  const mongoSession = client.startSession();
 
-    const result = await collection.deleteOne({ userId, isbn13 });
+  try {
+    mongoSession.startTransaction();
+
+    const [reports, librarys] = await Promise.all([
+      getCollection('reports'),
+      getCollection('librarys'),
+    ]);
+
+    const filter = { userId, isbn13 };
+    const [_, deleteBookResult] = await Promise.all([
+      reports.deleteOne(filter, { session: mongoSession }),
+      librarys.deleteOne(filter, { session: mongoSession }),
+    ]);
+
+    if (deleteBookResult.deletedCount === 0) {
+      throw new Error('BOOK_NOT_FOUND');
+    }
+
+    await mongoSession.commitTransaction();
 
     return NextResponse.json(
-      { message: '서재에서 책을 제거했습니다.', result },
-      { status: 201 },
+      { message: '서재에서 책을 제거했습니다.', result: deleteBookResult },
+      { status: 200 },
     );
   } catch (error) {
+    await mongoSession.abortTransaction();
+
+    if (error instanceof Error && error.message === 'BOOK_NOT_FOUND') {
+      return NextResponse.json(
+        { error: '서재에 해당 책이 없습니다.' },
+        { status: 404 },
+      );
+    }
+
     return NextResponse.json(
       { error: '서버 에러가 발생했습니다.' },
       { status: 500 },
     );
+  } finally {
+    mongoSession.endSession();
   }
 }

@@ -2,12 +2,15 @@ import { XMLParser } from 'fast-xml-parser';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  // 1. 클라이언트가 보낸 ISBN 받기
+  // 1. 클라이언트가 보낸 ISBN13 받기
   const { searchParams } = new URL(request.url);
-  const isbn = searchParams.get('isbn');
+  const isbn13 = searchParams.get('isbn13');
 
-  if (!isbn) {
-    return NextResponse.json({ error: 'ISBN이 필요합니다.' }, { status: 400 });
+  if (!isbn13) {
+    return NextResponse.json(
+      { error: 'ISBN13이 필요합니다.' },
+      { status: 400 },
+    );
   }
 
   // 2. 환경 변수 체크 (서버 내부이므로 안전함)
@@ -24,7 +27,7 @@ export async function GET(request: Request) {
   // 3. 네이버 API 호출 (XML 요청)
 
   const params = new URLSearchParams({
-    d_isbn: isbn,
+    d_isbn: isbn13,
     display: '1',
     start: '1',
   });

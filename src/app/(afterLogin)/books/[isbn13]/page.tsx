@@ -28,23 +28,23 @@ import {
 import { BookListResponse, BookSearchResponse } from '@/types/aladin.type';
 
 export default function BookDetailPage() {
-  const { isbn } = useParams();
+  const { isbn13 } = useParams();
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const { data: bookInLibrary, isLoading: isBookInLibraryLoading } =
     useQuery<BookInLibraryType>({
-      queryKey: ['library', isbn],
-      queryFn: async () => getLibrary(isbn as string),
-      enabled: !!isbn,
+      queryKey: ['library', isbn13],
+      queryFn: async () => getLibrary(isbn13 as string),
+      enabled: !!isbn13,
       staleTime: 5 * 60 * 1000,
       initialData: () => {
-        if (typeof isbn !== 'string') return undefined;
+        if (typeof isbn13 !== 'string') return undefined;
         const libraryQuery = queryClient.getQueryData<LibraryType>(['library']);
 
         if (!libraryQuery) return undefined;
         const foundBook = libraryQuery
-          ? libraryQuery.find((b) => b.isbn13 === isbn)
+          ? libraryQuery.find((b) => b.isbn13 === isbn13)
           : null;
         if (foundBook) return foundBook;
 
@@ -58,13 +58,13 @@ export default function BookDetailPage() {
   const { data: book, isLoading: isBookLoading } = useQuery<
     BookSearchResponse | undefined
   >({
-    queryKey: ['book', isbn],
+    queryKey: ['book', isbn13],
     queryFn: async () => {
-      if (typeof isbn !== 'string') return undefined;
-      return await fetchBookDetailProxy(isbn);
+      if (typeof isbn13 !== 'string') return undefined;
+      return await fetchBookDetailProxy(isbn13);
     },
     initialData: () => {
-      if (typeof isbn !== 'string') return undefined;
+      if (typeof isbn13 !== 'string') return undefined;
       const allBooksQueries = queryClient.getQueriesData<BookListResponse>({
         queryKey: ['books'],
       });
@@ -72,7 +72,7 @@ export default function BookDetailPage() {
       if (!allBooksQueries) return undefined;
       for (const [_, bookList] of allBooksQueries) {
         const books = bookList?.item;
-        const foundBook = books ? books.find((b) => b.isbn13 === isbn) : null;
+        const foundBook = books ? books.find((b) => b.isbn13 === isbn13) : null;
         if (foundBook) return foundBook;
       }
 
@@ -82,7 +82,7 @@ export default function BookDetailPage() {
       return queryClient.getQueryState(['books'])?.dataUpdatedAt;
     },
     staleTime: 30 * 60 * 1000,
-    enabled: !!isbn,
+    enabled: !!isbn13,
   });
 
   const { mutate: mutatePostLibrary } = useMutation({

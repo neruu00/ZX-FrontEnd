@@ -2,6 +2,8 @@ import { ObjectId } from 'mongodb';
 
 import { BookSearchResponse } from '@/types/aladin.type';
 
+import { deleteBookReport } from './report.api';
+
 export type BookInLibraryType = {
   _id: ObjectId;
   userId: string;
@@ -67,6 +69,7 @@ export async function deleteLibrary(isbn13: string) {
       cache: 'no-store',
     });
     if (!response.ok) throw new Error('Network response was not ok');
+
     return await response.json();
   } catch (error) {
     throw new Error('Failed to fetch book report');

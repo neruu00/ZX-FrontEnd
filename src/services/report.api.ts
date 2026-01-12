@@ -1,6 +1,6 @@
 import { Content } from '@tiptap/react';
 
-//TODO - isbn 검증 함수 구현
+//TODO - isbn13 검증 함수 구현
 //TODO - 에러 핸들링 구체화
 //TODO - 유저 인증 로직 구현
 //TODO - 베이스 URL 환경변수화
@@ -9,9 +9,9 @@ import { Content } from '@tiptap/react';
 //TODO - 응답 타입 정의
 //TODO - 예외 처리 구체화
 
-export async function getBookReport({ isbn }: { isbn: string }) {
+export async function getBookReport({ isbn13 }: { isbn13: string }) {
   try {
-    const response = await fetch(`/api/books/report?isbn=${isbn}`, {
+    const response = await fetch(`/api/books/report?isbn13=${isbn13}`, {
       cache: 'no-store',
     });
     if (!response.ok) throw new Error('Network response was not ok');
@@ -22,11 +22,11 @@ export async function getBookReport({ isbn }: { isbn: string }) {
 }
 
 export async function postBookReport({
-  isbn,
+  isbn13,
   title,
   content,
 }: {
-  isbn: string;
+  isbn13: string;
   title: string;
   content: Content;
 }) {
@@ -39,7 +39,7 @@ export async function postBookReport({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        isbn,
+        isbn13,
         title,
         content,
       }),
@@ -73,6 +73,25 @@ export async function updateBookReport({
         title,
         content,
       }),
+    });
+    if (!response.ok) throw new Error('Network response was not ok');
+    return await response.json();
+  } catch (error) {
+    throw new Error('Failed to fetch book report');
+  }
+}
+
+export async function deleteBookReport({ isbn13 }: { isbn13: string }) {
+  const baseUrl = '/api/books/report';
+  const apiParams = new URLSearchParams({ isbn13 });
+  const url = `${baseUrl}?${apiParams.toString()}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     if (!response.ok) throw new Error('Network response was not ok');
     return await response.json();

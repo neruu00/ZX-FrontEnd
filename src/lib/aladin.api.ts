@@ -39,11 +39,11 @@ const fetchBookSearchProxy = async ({
 };
 
 const fetchBookDetailProxy = async (
-  isbn: string,
+  isbn13: string,
 ): Promise<BookLookUpResponse | undefined> => {
   try {
     const res = await fetch(
-      `/api/open/book/aladin/detail?query=${encodeURIComponent(isbn)}`,
+      `/api/open/book/aladin/detail?query=${encodeURIComponent(isbn13)}`,
     );
 
     if (!res.ok) throw new Error('검색 실패');
@@ -58,14 +58,14 @@ const fetchBookDetailProxy = async (
 
 //NOTE - Use Only Server Components
 const fetchBookDetail = async (
-  isbn: string,
+  isbn13: string,
 ): Promise<BookLookUpResponse | undefined> => {
   if (!key) throw new Error('ttfkey is not defined');
 
   const baseUrl = 'http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx';
   const apiParams = new URLSearchParams({
     ttbkey: key,
-    ItemId: isbn,
+    ItemId: isbn13,
     ItemIdType: 'ISBN13',
     Output: 'JS',
     Version: '20131101',

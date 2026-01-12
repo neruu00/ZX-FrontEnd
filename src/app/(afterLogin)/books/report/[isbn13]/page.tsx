@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
-import Toolbar from '@/app/(afterLogin)/books/report/[isbn]/_components/TextEditorToolbar';
+import Toolbar from '@/app/(afterLogin)/books/report/[isbn13]/_components/TextEditorToolbar';
 import PageContainer from '@/components/PageContainer';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,10 +19,10 @@ import {
 import TextEditorContent from './_components/TextEditorContent';
 import useTextEditor from './_components/useTextEditor';
 
-type DateType = {
+type DataType = {
   _id: string;
   userId: string;
-  isbn: string;
+  isbn13: string;
   title: string;
   content: Content;
   createdAt: string;
@@ -30,16 +30,16 @@ type DateType = {
 };
 
 export default function BookReportPage() {
-  const { isbn } = useParams() as { isbn?: string };
+  const { isbn13 } = useParams() as { isbn13?: string };
   const [title, setTitle] = useState('');
-  const { data, isLoading } = useQuery<DateType>({
-    queryKey: ['report', isbn],
+  const { data, isLoading } = useQuery<DataType>({
+    queryKey: ['report', isbn13],
     queryFn: async () =>
-      getBookReport({ isbn } as { isbn: string }).then((res) => {
+      getBookReport({ isbn13 } as { isbn13: string }).then((res) => {
         setTitle(res.title);
         return res;
       }),
-    enabled: !!isbn,
+    enabled: !!isbn13,
   });
   const { editor } = useTextEditor({ content: data?.content || null });
 
@@ -53,7 +53,7 @@ export default function BookReportPage() {
   };
 
   const saveReport = async () => {
-    if (!editor || !isbn) return;
+    if (!editor || !isbn13) return;
     if (title.trim() === '') {
       alert('제목을 입력해주세요.');
       return;
@@ -67,7 +67,7 @@ export default function BookReportPage() {
         const body = { _id: data._id, title, content };
         await updateBookReport(body);
       } else {
-        const body = { isbn, title, content };
+        const body = { isbn13, title, content };
         await postBookReport(body);
       }
 
@@ -111,7 +111,7 @@ export default function BookReportPage() {
           className="flex items-center justify-center gap-1"
           asChild
         >
-          <Link href={`/books/${isbn}`}>
+          <Link href={`/books/${isbn13}`}>
             <ArrowLeft />
             <span>돌아가기</span>
           </Link>

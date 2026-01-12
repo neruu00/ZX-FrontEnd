@@ -24,14 +24,14 @@ export default function Book({ book }: Props) {
   const searchParams = useSearchParams();
   const keyword = searchParams.get('keyword');
 
-  const { isbn13: isbn, cover } = book;
+  const { isbn13, cover } = book;
 
   const title = book.title.split('-')[0].trim();
   const author = book.author.split(',')[0].replace('(지은이)', '').trim();
 
   return (
     <Link
-      href={`/books/${isbn}${keyword ? `?keyword=${keyword}` : ''}`}
+      href={`/books/${isbn13}${keyword ? `?keyword=${keyword}` : ''}`}
       className="group/card relative aspect-2/3 overflow-hidden transition-transform duration-300 hover:scale-105"
     >
       <ImageWithFallback
