@@ -1,16 +1,17 @@
 'use client';
 
 import { Check, Pause, Play, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter as useNavigation, useParams } from 'next/navigation';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 
-import IdeaRecord from './_components/IdeaRecord';
+import MemoForm from './_components/MemoForm';
 import ReadingTimer from './_components/ReadingTimer';
 
 export default function BookFlowPage() {
-  const router = useRouter();
+  const { isbn13 } = useParams<{ isbn13: string }>();
+  const router = useNavigation();
   const [isStop, setIsStop] = useState(false);
 
   const onClickStop = () => setIsStop((prev) => !prev);
@@ -48,7 +49,7 @@ export default function BookFlowPage() {
             <span>독서 완료</span>
           </Button>
         </div>
-        <IdeaRecord />
+        <MemoForm isbn13={isbn13} />
       </div>
     </div>
   );
