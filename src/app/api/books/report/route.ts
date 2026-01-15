@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { getCollection } from '@/lib/mongodb';
+import { collection } from '@/lib/mongodb';
 
 //SECTION - 독후감(Report) 조회(GET)
 export async function GET(request: NextRequest) {
@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const collection = await getCollection('reports');
-    const result = await collection.findOne({
+    const reports = await collection('reports');
+    const result = await reports.findOne({
       userId: session?.user.id,
       isbn13,
     });
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const collection = await getCollection('reports');
+    const reports = await collection('reports');
     const now = new Date().toISOString();
     const newReport = {
       userId: session?.user.id,
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       updatedAt: now,
     };
 
-    const result = await collection.insertOne(newReport);
+    const result = await reports.insertOne(newReport);
     return NextResponse.json(
       { message: '독후감을 저장했습니다.', id: result.insertedId },
       { status: 201 },
@@ -130,8 +130,8 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const collection = await getCollection('reports');
-    const result = await collection.updateOne(
+    const reports = await collection('reports');
+    const result = await reports.updateOne(
       { _id: new ObjectId(_id) },
       {
         $set: {
@@ -180,8 +180,8 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const collection = await getCollection('reports');
-    const result = await collection.deleteOne({
+    const reports = await collection('reports');
+    const result = await reports.deleteOne({
       userId: session?.user.id,
       isbn13,
     });

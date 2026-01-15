@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 
 import { authConfig } from './auth.config';
-import { clientPromise, getCollection } from './lib/mongodb';
+import { clientPromise, collection } from './lib/mongodb';
 
 /**
  * Google only provides Refresh Token
@@ -47,8 +47,8 @@ export const {
   ],
   events: {
     async createUser({ user }) {
-      const collection = await getCollection('users');
-      collection.updateOne(
+      const users = await collection('users');
+      users.updateOne(
         {
           _id: new ObjectId(user.id),
         },

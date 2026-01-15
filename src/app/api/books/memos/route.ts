@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getCollection } from '@/lib/mongodb';
 import checkAuth from '@/lib/checkAuth';
 import isValidObjectId from '@/lib/isValidObjectId';
+import { collection } from '@/lib/mongodb';
 
 //SECTION - 메모(memo) 조회(GET)
 export async function GET(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const memos = await getCollection('memos');
+    const memos = await collection('memos');
     const result = await memos
       .find({
         userId,
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const memos = await getCollection('memos');
+    const memos = await collection('memos');
     const now = new Date();
     const newMemo = {
       userId,
@@ -124,7 +124,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const memos = await getCollection('memos');
+    const memos = await collection('memos');
     const result = await memos.updateOne(
       { _id: new ObjectId(_id), userId },
       {
@@ -174,7 +174,7 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const memos = await getCollection('memos');
+    const memos = await collection('memos');
     const result = await memos.deleteOne({
       userId,
       _id: new ObjectId(_id),

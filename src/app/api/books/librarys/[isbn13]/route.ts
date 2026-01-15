@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { clientPromise, getCollection } from '@/lib/mongodb';
+import { clientPromise, collection } from '@/lib/mongodb';
 
 type Params = {
   params: Promise<{
@@ -21,8 +21,8 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 
   try {
-    const collection = await getCollection('librarys');
-    const result = await collection.findOne({ userId, isbn13 });
+    const librarys = await collection('librarys');
+    const result = await librarys.findOne({ userId, isbn13 });
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
@@ -56,9 +56,9 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    const collection = await getCollection('librarys');
+    const librarys = await collection('librarys');
 
-    const exists = await collection.findOne({ userId, isbn13 });
+    const exists = await librarys.findOne({ userId, isbn13 });
 
     if (exists) {
       return NextResponse.json(
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await collection.insertOne(docBody);
+    const result = await librarys.insertOne(docBody);
     return NextResponse.json(
       { message: '서재에 책을 추가했습니다.', id: result.insertedId },
       { status: 201 },
@@ -98,8 +98,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     mongoSession.startTransaction();
 
     const [reports, librarys] = await Promise.all([
-      getCollection('reports'),
-      getCollection('librarys'),
+      collection('reports'),
+      collection('librarys'),
     ]);
 
     const filter = { userId, isbn13 };

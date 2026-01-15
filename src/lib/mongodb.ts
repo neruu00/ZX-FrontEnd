@@ -44,10 +44,10 @@ if (process.env.NODE_ENV === 'development') {
 // mongoDB 컬렉션 가져오기
 //TODO - 공통 모듈로 분리하기
 //TODO - 에러 핸들링
-async function getCollection(collectionName: string) {
+async function collection(collectionName: string) {
   const client = await clientPromise;
   const db = client.db('zx_test');
   return db.collection(collectionName);
 }
 
-export { clientPromise, getCollection };
+export { clientPromise, collection };
