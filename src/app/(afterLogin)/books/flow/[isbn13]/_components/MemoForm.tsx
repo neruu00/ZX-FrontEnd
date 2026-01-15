@@ -1,11 +1,12 @@
 'use client';
 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MessageSquare, X } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getMemos, postMemo } from '@/services/memo.api';
 
 type Data = {
   _id: string;
@@ -23,25 +24,13 @@ export default function MemoForm({ isbn13 }: { isbn13: string }) {
 
   const { data, isLoading } = useQuery<Data>({
     queryKey: ['memos', isbn13],
-    queryFn: async () => {
-      const res = await fetch(`/api/books/memos?isbn13=${isbn13}`, {});
-      return res.json();
-    },
+    queryFn: () => getMemos({ isbn13 }),
     enabled: open && !!isbn13,
   });
 
   const { mutate } = useMutation({
     mutationKey: ['create-memo'],
-    mutationFn: async (newMemo: { isbn13: string; content: string }) => {
-      const res = await fetch('/api/books/memos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newMemo),
-      });
-      return res.json();
-    },
+    mutationFn: () => postMemo({ isbn13, content }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['memos', isbn13] });
       setContent('');
@@ -67,7 +56,7 @@ export default function MemoForm({ isbn13 }: { isbn13: string }) {
       alert('내용을 입력해주세요');
       return;
     }
-    mutate({ isbn13, content });
+    mutate();
   };
 
   return (
@@ -117,9 +106,10 @@ export default function MemoForm({ isbn13 }: { isbn13: string }) {
             placeholder="기록할 생각을 입력해주세요..."
             value={content}
             onChange={onChange}
+            disabled={isLoading}
           />
           <div className="flex justify-end">
-            <Button variant="default" type="submit">
+            <Button variant="default" type="submit" disabled={isLoading}>
               저장
             </Button>
           </div>
