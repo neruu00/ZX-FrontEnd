@@ -34,6 +34,7 @@ import {
   getLibraryList,
   LibraryType,
 } from '@/services/library.api';
+import { useRouter } from 'next/navigation';
 
 // --- [Logic] 색상 밝기 계산 및 텍스트 색상 결정 ---
 function getContrastColor(hexColor: string) {
@@ -140,12 +141,13 @@ function BookSpine({ book }: { book: BookInLibraryType }) {
 
   // ★ 커스텀 훅을 통해 계산된 속성 가져오기
   const { status, bgColor, textColor } = useBookAttributes(book);
+  const router = useRouter();
 
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div
+          <button
             ref={setNodeRef}
             // 배경색과 텍스트 색상을 동적으로 적용
             style={{ ...style, backgroundColor: bgColor, color: textColor }}
@@ -157,6 +159,7 @@ function BookSpine({ book }: { book: BookInLibraryType }) {
               'hover:-translate-y-2 hover:shadow-md hover:brightness-110',
               isDragging && 'z-50 scale-105 opacity-70 shadow-xl',
             )}
+            onClick={() => router.push(`/books/${book.isbn13}`)}
           >
             <div className="absolute inset-0 bg-linear-to-r from-black/20 via-transparent to-white/10" />
 
@@ -170,7 +173,7 @@ function BookSpine({ book }: { book: BookInLibraryType }) {
                 {book.title.split('-')[0]}
               </span>
             </div>
-          </div>
+          </button>
         </TooltipTrigger>
 
         <TooltipContent

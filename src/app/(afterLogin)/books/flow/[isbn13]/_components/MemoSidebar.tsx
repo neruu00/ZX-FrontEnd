@@ -17,7 +17,7 @@ type Data = {
   updatedAt: string;
 }[];
 
-export default function MemoForm({ isbn13 }: { isbn13: string }) {
+export default function MemoSidebar({ isbn13 }: { isbn13: string }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState('');
@@ -61,10 +61,13 @@ export default function MemoForm({ isbn13 }: { isbn13: string }) {
 
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen((prev) => !prev)}>
+      <button
+        className="bg-background-secondary fixed top-1/2 right-0 z-100 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-sm rounded-bl-sm"
+        onClick={() => setOpen((prev) => !prev)}
+      >
         <MessageSquare size={16} />
-        <span>생각 기록</span>
-      </Button>
+      </button>
+
       {open && (
         <div className="fixed top-0 left-0 z-20 h-dvh w-dvw bg-black/40" />
       )}
