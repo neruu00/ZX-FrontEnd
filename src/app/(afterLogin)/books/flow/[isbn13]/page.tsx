@@ -215,8 +215,8 @@ export default function BookFlowPage() {
           <div className="relative flex max-h-14 w-120 flex-1 items-center justify-center">
             {mediaEmbedUrl ? (
               <div className="bg-opacity-10 group flex h-full w-full items-center justify-between gap-4 rounded-full border border-zinc-700 bg-zinc-900 px-6 transition-colors hover:border-orange-500/50">
-                <div className="it ems-center flex gap-3 overflow-hidden">
-                  <Youtube size={16} className="shrink-0 text-red-500" />
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <Youtube size={16} className="shrink-0" />
                   <span className="truncate text-sm text-zinc-300">
                     Playing Youtube...
                   </span>
