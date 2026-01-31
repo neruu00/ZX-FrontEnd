@@ -31,7 +31,6 @@ export default function BookSpine({ book }: Props) {
     zIndex: isDragging ? 50 : 'auto',
   };
 
-  // ★ 커스텀 훅을 통해 계산된 속성 가져오기
   const { status, bgColor, textColor } = useBookAttributes(book);
   const router = useRouter();
 
@@ -41,7 +40,6 @@ export default function BookSpine({ book }: Props) {
         <TooltipTrigger asChild>
           <button
             ref={setNodeRef}
-            // 배경색과 텍스트 색상을 동적으로 적용
             style={{ ...style, backgroundColor: bgColor, color: textColor }}
             {...attributes}
             {...listeners}
@@ -68,12 +66,9 @@ export default function BookSpine({ book }: Props) {
           </button>
         </TooltipTrigger>
 
-        <TooltipContent
-          side="top"
-          className="w-80 border-slate-700 bg-slate-900 text-slate-200"
-        >
+        <TooltipContent side="top" className="w-80">
           <div className="truncate text-sm font-bold">{book.title}</div>
-          <div className="mb-2 text-xs text-slate-400">{book.author}</div>
+          <div className="mb-2 text-xs text-slate-700">{book.author}</div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

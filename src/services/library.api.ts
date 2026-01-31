@@ -14,6 +14,8 @@ export type BookInLibraryType = {
   spineColor?: string;
   itemPage: number;
   readPages: number;
+  shelf: number;
+  order: number;
   status?: BookStatus;
 };
 

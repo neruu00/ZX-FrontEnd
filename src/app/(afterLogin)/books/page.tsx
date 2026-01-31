@@ -10,9 +10,10 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import BookSpineCase from './_components/BookSpineCase';
 import BookCase from './_components/BookCase';
+import PageContainer from '@/components/PageContainer';
 
 export default function LibraryPage() {
-  const [viewType, setViewType] = useState<'spine' | 'flat'>('flat');
+  const [viewType, setViewType] = useState<'spine' | 'flat'>('spine');
   const { data } = useQuery({
     queryKey: ['library'],
     queryFn: getLibraryList,
@@ -20,7 +21,7 @@ export default function LibraryPage() {
   });
 
   return (
-    <main className="m-auto w-[920px] p-4">
+    <PageContainer as="main" className="flex flex-col gap-4">
       <header>
         <div className="flex justify-between">
           <h2 className="text-3xl/tight font-normal">서재</h2>
@@ -29,7 +30,7 @@ export default function LibraryPage() {
               variant="ghost"
               onClick={() => setViewType('spine')}
               className={cn([
-                'p-2',
+                'rounded-sm p-2',
                 viewType === 'spine'
                   ? 'stroke-icon-brand-secondary bg-background-secondary'
                   : '',
@@ -41,7 +42,7 @@ export default function LibraryPage() {
               variant="ghost"
               onClick={() => setViewType('flat')}
               className={cn([
-                'p-2',
+                'rounded-sm p-2',
                 viewType === 'flat'
                   ? 'stroke-icon-brand-secondary bg-background-secondary'
                   : '',
@@ -61,6 +62,6 @@ export default function LibraryPage() {
       </header>
 
       {viewType === 'spine' ? <BookSpineCase /> : <BookCase books={data} />}
-    </main>
+    </PageContainer>
   );
 }
