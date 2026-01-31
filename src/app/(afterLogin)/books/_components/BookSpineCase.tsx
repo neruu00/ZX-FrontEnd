@@ -29,7 +29,7 @@ import Shelf from './Shelf';
 
 export default function BookSpineCase() {
   const [books, setBooks] = useState<LibraryType[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [currentActiveId, setCurrentActiveId] = useState<string | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ['library'],
     queryFn: getLibraryList,
@@ -50,7 +50,7 @@ export default function BookSpineCase() {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id.toString());
+    setCurrentActiveId(event.active.id.toString());
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -147,6 +147,8 @@ export default function BookSpineCase() {
       }
       return newBooks;
     });
+
+    setCurrentActiveId(null);
   };
 
   useEffect(() => {
@@ -208,10 +210,15 @@ export default function BookSpineCase() {
               }),
             }}
           >
-            {activeId ? (
+            {currentActiveId ? (
               // 현재 드래그 중인 책의 정보를 찾아 렌더링
               <BookSpine
-                book={books.flat().find((b) => b._id.toString() === activeId)!}
+                book={
+                  books
+                    .flat()
+                    .find((b) => b._id.toString() === currentActiveId)!
+                }
+                isOverlay
               />
             ) : null}
           </DragOverlay>

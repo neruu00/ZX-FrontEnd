@@ -13,9 +13,11 @@ import useBookAttributes from '../_hooks/useBookAttributes';
 
 interface Props {
   book: BookInLibraryType;
+  isOverlay?: boolean;
+  disabled?: boolean;
 }
 
-export default function BookSpine({ book }: Props) {
+export default function BookSpine({ book, isOverlay = false }: Props) {
   const {
     attributes,
     listeners,
@@ -48,6 +50,7 @@ export default function BookSpine({ book }: Props) {
               'transition-all duration-200 ease-out',
               'hover:-translate-y-2 hover:shadow-md hover:brightness-110',
               isDragging && 'z-50 scale-105 opacity-70 shadow-xl',
+              isOverlay ? 'cursor-grabbing' : 'cursor-grab',
             )}
             onClick={() => router.push(`/books/${book.isbn13}`)}
           >
