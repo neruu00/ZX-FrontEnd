@@ -7,7 +7,7 @@ interface Props {
   books?: BookSearchResponse[] | LibraryType;
 }
 
-export default function BookContainer({ books }: Props) {
+export default function BookCase({ books }: Props) {
   return (
     <div className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-4">
       {books?.map((book) => (

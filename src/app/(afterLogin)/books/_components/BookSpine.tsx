@@ -1,0 +1,81 @@
+import {
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { BookInLibraryType } from '@/services/library.api';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Tooltip } from '@radix-ui/react-tooltip';
+import { useRouter } from 'next/navigation';
+import useBookAttributes from '../_hooks/useBookAttributes';
+
+interface Props {
+  book: BookInLibraryType;
+}
+
+export default function BookSpine({ book }: Props) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: book._id.toString() });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 'auto',
+  };
+
+  // ★ 커스텀 훅을 통해 계산된 속성 가져오기
+  const { status, bgColor, textColor } = useBookAttributes(book);
+  const router = useRouter();
+
+  return (
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            ref={setNodeRef}
+            // 배경색과 텍스트 색상을 동적으로 적용
+            style={{ ...style, backgroundColor: bgColor, color: textColor }}
+            {...attributes}
+            {...listeners}
+            className={cn(
+              'relative flex h-55 w-10 cursor-grab flex-col items-center justify-center rounded-xs border-l border-white/10 shadow-sm active:cursor-grabbing',
+              'transition-all duration-200 ease-out',
+              'hover:-translate-y-2 hover:shadow-md hover:brightness-110',
+              isDragging && 'z-50 scale-105 opacity-70 shadow-xl',
+            )}
+            onClick={() => router.push(`/books/${book.isbn13}`)}
+          >
+            <div className="absolute inset-0 bg-linear-to-r from-black/20 via-transparent to-white/10" />
+
+            <div
+              className="text-center text-sm font-medium"
+              style={{
+                writingMode: 'sideways-rl',
+              }}
+            >
+              <span className="line-clamp-1 h-50 truncate leading-none tracking-tight">
+                {book.title.split('-')[0]}
+              </span>
+            </div>
+          </button>
+        </TooltipTrigger>
+
+        <TooltipContent
+          side="top"
+          className="w-80 border-slate-700 bg-slate-900 text-slate-200"
+        >
+          <div className="truncate text-sm font-bold">{book.title}</div>
+          <div className="mb-2 text-xs text-slate-400">{book.author}</div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
