@@ -5,8 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import SearchField from '@/components/SearchField';
 import { fetchBookSearchProxy } from '@/lib/aladin.api';
-
-import BookContainer from '../_components/BookContainer';
+import BookCase from '../_components/BookCase';
 
 export default function SearchBookPage() {
   const searchParams = useSearchParams();
@@ -30,9 +29,7 @@ export default function SearchBookPage() {
         />
       </div>
       {isLoading && <div>로딩중...</div>}
-      {isEnabledQuery && !isLoading && data && (
-        <BookContainer books={data.item} />
-      )}
+      {isEnabledQuery && !isLoading && data && <BookCase books={data.item} />}
     </main>
   );
 }

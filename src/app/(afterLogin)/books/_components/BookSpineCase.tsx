@@ -191,7 +191,7 @@ export default function BookSpineCase() {
                   items={shelf.map((b) => b._id.toString())}
                   strategy={rectSortingStrategy}
                 >
-                  <div className="bg-background-primary flex min-h-67 w-full flex-wrap items-end gap-0.5 px-0.5 pt-10 shadow-[inset_0_12px_24px_-3px_rgba(12,12,13,0.1)]">
+                  <div className="bg-background-primary-hover flex min-h-67 w-full flex-wrap items-end gap-0.5 px-0.5 pt-10 shadow-[inset_0_12px_24px_-3px_rgba(12,12,13,0.1)]">
                     {shelf.map((book) => (
                       <BookSpine key={book._id.toString()} book={book} />
                     ))}
