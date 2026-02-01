@@ -40,7 +40,7 @@
   --color-chart-5: var(--chart-5);
   /* ---DOKHU Theme--- */
   --color-background-primary: var(--background-primary);
-  --color-background-primary-hover: var(--background-primary-hover);
+  --color-background-primary-hover: var(--color-stone-900);
   --color-background-secondary: var(--background-secondary);
   --color-background-tertiary-hover: var(--background-tertiary-hover);
   --color-border-primary: var(--border-primary);

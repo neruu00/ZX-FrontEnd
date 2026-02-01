@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 
 import { BookSearchResponse } from '@/types/aladin.type';
 
-import { deleteBookReport } from './report.api';
+export type BookStatus = 'WISH' | 'COMPLETED' | 'PENDING' | null;
 
 export type BookInLibraryType = {
   _id: ObjectId;
@@ -11,8 +11,13 @@ export type BookInLibraryType = {
   title: string;
   author: string;
   cover: string;
+  spineColor?: string;
   itemPage: number;
   readPages: number;
+  shelf?: number;
+  order?: number;
+  status?: BookStatus;
+  isPlaceholder?: boolean;
 };
 
 export type LibraryType = BookInLibraryType[];

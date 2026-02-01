@@ -1,12 +1,17 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { MessageSquare, X } from 'lucide-react';
+import { MessageSquare, NotebookPenIcon, X } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getMemos, postMemo } from '@/services/memo.api';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 type Data = {
   _id: string;
@@ -17,7 +22,7 @@ type Data = {
   updatedAt: string;
 }[];
 
-export default function MemoForm({ isbn13 }: { isbn13: string }) {
+export default function MemoSidebar({ isbn13 }: { isbn13: string }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState('');
@@ -61,16 +66,27 @@ export default function MemoForm({ isbn13 }: { isbn13: string }) {
 
   return (
     <>
-      <Button variant="secondary" onClick={() => setOpen((prev) => !prev)}>
-        <MessageSquare size={16} />
-        <span>생각 기록</span>
-      </Button>
+      <Tooltip delayDuration={300}>
+        <TooltipTrigger asChild>
+          <button
+            className="bg-background-secondary fixed top-1/2 right-0 z-100 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-tl-sm rounded-bl-sm"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            <NotebookPenIcon size={20} />
+          </button>
+        </TooltipTrigger>
+
+        <TooltipContent side="left">
+          <p className="text-lg font-semibold">독서 메모 열기</p>
+        </TooltipContent>
+      </Tooltip>
+
       {open && (
         <div className="fixed top-0 left-0 z-20 h-dvh w-dvw bg-black/40" />
       )}
       <div
         className={cn([
-          'fixed top-0 right-0 z-30',
+          'fixed top-0 right-0 z-101',
           'h-dvh w-[580px] p-4',
           'flex flex-col gap-4',
           'bg-primary-foreground',
