@@ -1,5 +1,6 @@
-import { BookInLibraryType } from '@/services/library.api';
 import { useEffect, useState } from 'react';
+
+import { BookInLibraryType } from '@/services/library.api';
 
 export default function useBookAttributes(book: BookInLibraryType) {
   const [extractedColor, setExtractedColor] = useState<string | null>(null);

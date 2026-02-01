@@ -1,19 +1,24 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { X, Play, Pause, Save } from 'lucide-react'; // Save 아이콘 추가
+import { Loader2 } from 'lucide-react'; // 로딩 아이콘
 import { motion, AnimatePresence } from 'motion/react';
 import { notFound, useParams } from 'next/navigation';
-import MemoSidebar from './_components/MemoSidebar';
-import { useModalStore } from '@/stores/useModalStore';
-import BookmarkModal from './_components/BookmarkModal';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+import { Button } from '@/components/ui/button';
 import Validator from '@/lib/Validator';
+import { getOrCreateFlow, updateFlow } from '@/services/flow.api';
+import { useModalStore } from '@/stores/useModalStore';
+
+import BookmarkModal from './_components/BookmarkModal';
+import MemoSidebar from './_components/MemoSidebar';
 import YouTubeInputField from './_components/YouTubeInputField';
 import YouTubePlayer from './_components/YouTubePlayer';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getOrCreateFlow, updateFlow } from '@/services/flow.api';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react'; // 로딩 아이콘
+
+
+
 
 const STORAGE_KEY = 'dokhu-book-flow-storage';
 

@@ -1,3 +1,8 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Tooltip } from '@radix-ui/react-tooltip';
+import { useRouter } from 'next/navigation';
+
 import {
   TooltipContent,
   TooltipProvider,
@@ -5,10 +10,7 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { BookInLibraryType } from '@/services/library.api';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Tooltip } from '@radix-ui/react-tooltip';
-import { useRouter } from 'next/navigation';
+
 import useBookAttributes from '../_hooks/useBookAttributes';
 
 interface Props {

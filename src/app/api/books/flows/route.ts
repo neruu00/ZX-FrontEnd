@@ -1,9 +1,9 @@
+import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { collection } from '@/lib/mongodb';
 import checkAuth from '@/lib/checkAuth';
+import { collection } from '@/lib/mongodb';
 import Validator from '@/lib/Validator';
-import { ObjectId } from 'mongodb';
 
 //SECTION - flow 조회(GET) 혹은 생성(POST)
 export async function GET(request: NextRequest) {
