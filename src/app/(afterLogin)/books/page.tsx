@@ -21,10 +21,7 @@ export default function LibraryPage() {
   });
 
   return (
-    <PageContainer
-      as="main"
-      className="no-scrollbar flex max-h-dvh flex-col gap-4 overflow-y-scroll"
-    >
+    <PageContainer as="main" className="flex max-h-dvh flex-col gap-4">
       <header>
         <div className="flex justify-between">
           <h2 className="text-3xl/tight font-normal">서재</h2>

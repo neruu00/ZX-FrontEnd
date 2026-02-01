@@ -16,6 +16,7 @@ export default function PageContainer({
   return (
     <Component
       className={cn([
+        'no-scrollbar overflow-y-scroll',
         'mx-auto w-[clamp(24rem,100%,64rem)] overflow-y-scroll p-8',
         //FIXME - remove desktop breakpoint style
         areaVisible

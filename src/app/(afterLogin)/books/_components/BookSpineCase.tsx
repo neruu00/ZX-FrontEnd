@@ -34,7 +34,7 @@ interface Props {
 
 export default function BookSpineCase({ books, isLoading }: Props) {
   const [sortedBooks, setSortedBooks] = useState<LibraryType[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [currentActiveId, setCurrentActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -54,7 +54,7 @@ export default function BookSpineCase({ books, isLoading }: Props) {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id.toString());
+    setCurrentActiveId(event.active.id.toString());
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -103,7 +103,7 @@ export default function BookSpineCase({ books, isLoading }: Props) {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    setActiveId(null); // 드래그 종료 시 activeId 초기화
+    setCurrentActiveId(null); // 드래그 종료 시 activeId 초기화
 
     if (!over) return;
 
@@ -146,6 +146,8 @@ export default function BookSpineCase({ books, isLoading }: Props) {
         return placeholder ? [...booksOnly, placeholder] : booksOnly;
       });
     });
+
+    setCurrentActiveId(null);
   };
 
   useEffect(() => {
@@ -215,12 +217,15 @@ export default function BookSpineCase({ books, isLoading }: Props) {
               }),
             }}
           >
-            {activeId ? (
+            {currentActiveId ? (
               // 현재 드래그 중인 책의 정보를 찾아 렌더링
               <BookSpine
                 book={
-                  sortedBooks.flat().find((b) => b._id.toString() === activeId)!
+                  sortedBooks
+                    .flat()
+                    .find((b) => b._id.toString() === currentActiveId)!
                 }
+                isOverlay
               />
             ) : null}
           </DragOverlay>
