@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const librarys = await collection('librarys');
-    const result = await librarys.find({ userId }).limit(12).toArray();
+    const result = await librarys.find({ userId }).toArray();
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(

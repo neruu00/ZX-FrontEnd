@@ -32,6 +32,9 @@ interface Props {
   isLoading: boolean;
 }
 
+const DEFAULT_SHELF_COUNT = 3;
+const MAX_BOOK_ORDER = 15;
+
 export default function BookSpineCase({ books, isLoading }: Props) {
   const [sortedBooks, setSortedBooks] = useState<LibraryType[]>([]);
   const [currentActiveId, setCurrentActiveId] = useState<string | null>(null);
@@ -152,16 +155,36 @@ export default function BookSpineCase({ books, isLoading }: Props) {
 
   useEffect(() => {
     if (books && Array.isArray(books)) {
+      const sorted = [...books].sort(
+        (a, b) => (a.shelf || -1) - (b.shelf || -1),
+      );
+
       setSortedBooks(() => {
-        const nextBooks: LibraryType[] = [[], [], []];
-        books.forEach((book, i) => {
-          if (i % 2) {
-            book.shelf = 0;
-            nextBooks[0].push(book);
-          } else {
-            book.shelf = 1;
-            nextBooks[1].push(book);
-          }
+        const lastShelfNum = books.at(-1)?.shelf;
+        const initShelf = lastShelfNum
+          ? Math.max(lastShelfNum + 1, DEFAULT_SHELF_COUNT)
+          : DEFAULT_SHELF_COUNT;
+        const nextBooks: LibraryType[] = Array.from(
+          { length: initShelf },
+          () => [],
+        );
+
+        sorted.forEach((book) => {
+          if (!book.shelf) {
+            const flag = nextBooks.some((shelf, idx) => {
+              if (shelf.length < MAX_BOOK_ORDER) {
+                book.shelf = idx;
+                book.order = shelf.length;
+                shelf.push(book);
+                return true;
+              } else return false;
+            });
+            if (!flag) {
+              book.shelf = nextBooks.length;
+              book.order = 0;
+              nextBooks.push([book]);
+            }
+          } else nextBooks[book.shelf].push(book);
         });
 
         nextBooks.forEach((shelf, idx) => {
@@ -171,6 +194,7 @@ export default function BookSpineCase({ books, isLoading }: Props) {
             isPlaceholder: true,
           } as BookInLibraryType);
         });
+
         return nextBooks;
       });
     }
@@ -184,7 +208,7 @@ export default function BookSpineCase({ books, isLoading }: Props) {
     );
 
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div className="mx-auto w-full max-w-240">
       {!isLoading && sortedBooks && sortedBooks.length > 0 ? (
         <DndContext
           sensors={sensors}
@@ -200,13 +224,17 @@ export default function BookSpineCase({ books, isLoading }: Props) {
                   items={shelf.map((b) => b._id.toString())}
                   strategy={horizontalListSortingStrategy}
                 >
-                  <div className="bg-background-primary-hover flex min-h-67 w-full flex-wrap items-end gap-0.5 px-0.5 pt-10 shadow-[inset_0_12px_24px_-3px_rgba(12,12,13,0.1)]">
-                    {shelf.map((book) => (
-                      <BookSpine
-key={`${book._id}-${book.title}`}
-book={book}
-/>
-                    ))}
+                  <div className="bg-background-primary-hover flex min-h-70 min-w-240 flex-wrap items-end gap-1 px-0.5 pt-9.5 shadow-[inset_0_12px_24px_-3px_rgba(12,12,13,0.1)]">
+                    {shelf.map((book) => {
+                      if (book.isPlaceholder && shelf.length >= MAX_BOOK_ORDER)
+                        return null;
+                      return (
+                        <BookSpine
+                          key={`${book._id}-${book.title}`}
+                          book={book}
+                        />
+                      );
+                    })}
                   </div>
                   <div className="bg-background-primary h-7 border-t" />
                 </SortableContext>
