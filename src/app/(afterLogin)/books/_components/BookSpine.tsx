@@ -62,7 +62,7 @@ export default function BookSpine({ book, isOverlay = false }: Props) {
               'relative flex h-60.5 w-15 cursor-grab flex-col items-center justify-center rounded-xs border-l border-white/10 shadow-sm active:cursor-grabbing',
               'transition-all duration-200 ease-out',
               'hover:-translate-y-2 hover:shadow-md hover:brightness-110',
-              isDragging && 'z-50 scale-105 opacity-70 shadow-xl',
+              isDragging && 'z-50 opacity-70 shadow-xl',
               isOverlay ? 'cursor-grabbing' : 'cursor-grab',
             )}
             onClick={() => router.push(`/books/${book.isbn13}`)}

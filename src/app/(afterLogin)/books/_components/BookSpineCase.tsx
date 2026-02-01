@@ -77,6 +77,14 @@ export default function BookSpineCase({ books, isLoading }: Props) {
     )
       return;
 
+    // 꽉 찼다면 아무 작업도 하지 않음
+    const targetShelfBooksCount = sortedBooks[overShelfIdx].filter(
+      (b) => !b.isPlaceholder,
+    ).length;
+    if (targetShelfBooksCount >= MAX_BOOK_ORDER) {
+      return;
+    }
+
     // 다른 Shelf로 넘어가는 순간 상태 업데이트
     setSortedBooks((prev) => {
       const newBooks = [...prev.map((s) => [...s])];
@@ -117,6 +125,16 @@ export default function BookSpineCase({ books, isLoading }: Props) {
     const overShelfIdx = findContainer(overId);
 
     if (activeShelfIdx === -1 || overShelfIdx === -1) return;
+
+    // 대상 Shelf가 꽉 찼다면 취소
+    if (activeShelfIdx !== overShelfIdx) {
+      const targetShelfBooksCount = sortedBooks[overShelfIdx].filter(
+        (b) => !b.isPlaceholder,
+      ).length;
+      if (targetShelfBooksCount >= MAX_BOOK_ORDER) {
+        return;
+      }
+    }
 
     setSortedBooks((prev) => {
       const newBooks = [...prev.map((s) => [...s])];
