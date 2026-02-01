@@ -202,7 +202,10 @@ export default function BookSpineCase({ books, isLoading }: Props) {
                 >
                   <div className="bg-background-primary-hover flex min-h-67 w-full flex-wrap items-end gap-0.5 px-0.5 pt-10 shadow-[inset_0_12px_24px_-3px_rgba(12,12,13,0.1)]">
                     {shelf.map((book) => (
-                      <BookSpine key={book._id.toString()} book={book} />
+                      <BookSpine
+key={`${book._id}-${book.title}`}
+book={book}
+/>
                     ))}
                   </div>
                   <div className="bg-background-primary h-7 border-t" />
