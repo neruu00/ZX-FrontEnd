@@ -17,6 +17,7 @@ export type BookInLibraryType = {
   shelf: number;
   order: number;
   status?: BookStatus;
+  isPlaceholder?: boolean;
 };
 
 export type LibraryType = BookInLibraryType[];

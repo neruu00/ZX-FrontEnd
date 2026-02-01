@@ -23,13 +23,26 @@ export default function BookSpine({ book }: Props) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: book._id.toString() });
+  } = useSortable({ id: book._id.toString(), disabled: book.isPlaceholder });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 50 : 'auto',
+    opacity: book.isPlaceholder ? 0 : isDragging ? 0.3 : 1,
   };
+
+  if (book.isPlaceholder) {
+    return (
+      <div
+        aria-placeholder={book._id.toString()}
+        ref={setNodeRef}
+        {...attributes}
+        {...listeners}
+        className={cn('pointer-events-none', 'h-55 w-px')}
+      />
+    );
+  }
 
   const { status, bgColor, textColor } = useBookAttributes(book);
   const router = useRouter();

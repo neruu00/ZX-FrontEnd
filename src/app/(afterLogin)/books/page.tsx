@@ -14,7 +14,7 @@ import PageContainer from '@/components/PageContainer';
 
 export default function LibraryPage() {
   const [viewType, setViewType] = useState<'spine' | 'flat'>('spine');
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['library'],
     queryFn: getLibraryList,
     staleTime: 5 * 60 * 1000,
@@ -64,7 +64,11 @@ export default function LibraryPage() {
         </div>
       </header>
 
-      {viewType === 'spine' ? <BookSpineCase /> : <BookCase books={data} />}
+      {viewType === 'spine' ? (
+        <BookSpineCase books={data} isLoading={isLoading} />
+      ) : (
+        <BookCase books={data} />
+      )}
     </PageContainer>
   );
 }
