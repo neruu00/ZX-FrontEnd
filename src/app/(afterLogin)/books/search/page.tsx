@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import SearchField from '@/components/SearchField';
 import { fetchBookSearchProxy } from '@/lib/aladin.api';
+
 import BookCase from '../_components/BookCase';
 
 export default function SearchBookPage() {

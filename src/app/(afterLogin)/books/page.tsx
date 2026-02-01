@@ -1,16 +1,16 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { LayoutGrid, LibraryBig } from 'lucide-react';
+import { useState } from 'react';
 
+import PageContainer from '@/components/PageContainer';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { getLibraryList } from '@/services/library.api';
 
-import { Button } from '@/components/ui/button';
-import { LayoutGrid, LibraryBig } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import BookSpineCase from './_components/BookSpineCase';
 import BookCase from './_components/BookCase';
-import PageContainer from '@/components/PageContainer';
+import BookSpineCase from './_components/BookSpineCase';
 
 export default function LibraryPage() {
   const [viewType, setViewType] = useState<'spine' | 'flat'>('spine');

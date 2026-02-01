@@ -1,6 +1,6 @@
+import { motion } from 'motion/react';
 import { useState } from 'react';
 
-import { motion } from 'motion/react';
 import { useModalStore } from '@/stores/useModalStore';
 
 interface Props {
