@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -15,6 +14,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import React, { useState } from 'react';
 
 export default function Page() {
   const [items, setItems] = useState([1, 2, 3]);
@@ -54,9 +56,6 @@ export default function Page() {
     }
   }
 }
-
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 export function SortableItem({ id }: { id: number }) {
   const { attributes, listeners, setNodeRef, transform, transition } =

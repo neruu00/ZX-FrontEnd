@@ -28,6 +28,8 @@ export default function BookSpine({ book, isOverlay = false }: Props) {
     transition,
     isDragging,
   } = useSortable({ id: book._id.toString(), disabled: book.isPlaceholder });
+  const { status, bgColor, textColor } = useBookAttributes(book);
+  const router = useRouter();
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -47,9 +49,6 @@ export default function BookSpine({ book, isOverlay = false }: Props) {
       />
     );
   }
-
-  const { status, bgColor, textColor } = useBookAttributes(book);
-  const router = useRouter();
 
   return (
     <TooltipProvider delayDuration={300}>
